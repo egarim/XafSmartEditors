@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 using DevExpress.ExpressApp.Xpo;
 using XafSmartEditors.Blazor.Server.Services;
 using DevExpress.Persistent.BaseImpl.PermissionPolicy;
+using Azure.AI.OpenAI;
+using Azure;
+using DevExpress.AIIntegration;
+using OpenAI;
+using XafSmartEditors.Module;
 
 namespace XafSmartEditors.Blazor.Server;
 
@@ -101,6 +106,36 @@ public class Startup {
         });
         authentication.AddCookie(options => {
             options.LoginPath = "/LoginPage";
+        });
+
+        string OpenAiKey = Environment.GetEnvironmentVariable("OpenAiTestKey");
+
+        // Bind the "Ai" section to the AiSettings class
+        var aiSettings = new AiSettings();
+        Configuration.GetSection("Ai").Bind(aiSettings);
+        aiSettings.Key = OpenAiKey;
+        services.AddDevExpressAI((config) => {
+
+            //Open Ai models ID are a bit different than azure, Azure=gtp4o OpenAI=gpt-4o
+            if (aiSettings.Service.ToLower() == "openai")
+            {
+                var clientOpenAi = new OpenAIClient(new System.ClientModel.ApiKeyCredential(aiSettings.Key));
+                config.RegisterChatClientOpenAIService(clientOpenAi, aiSettings.Model);
+                config.RegisterOpenAIAssistants(clientOpenAi, aiSettings.Model);
+            }
+            if (aiSettings.Service.ToLower() == "Azure")
+            {
+                var clientAzure = new AzureOpenAIClient(
+                    new Uri(aiSettings.EndPoint),
+                    new AzureKeyCredential(aiSettings.Key));
+                config.RegisterChatClientOpenAIService(clientAzure, aiSettings.Model);
+                config.RegisterOpenAIAssistants(clientAzure, aiSettings.Model);
+            }
+
+
+
+
+
         });
     }
 

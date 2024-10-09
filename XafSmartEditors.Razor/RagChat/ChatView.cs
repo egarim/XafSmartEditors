@@ -24,6 +24,7 @@ namespace XafSmartEditors.Razor.RagChat;
 
 public class ChatView : IXafEntityObject/*, IObjectSpaceLink*/, INotifyPropertyChanged
 {
+    
     //private IObjectSpace objectSpace;
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)
     { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }

@@ -13,17 +13,21 @@ using DevExpress.ExpressApp.Model.DomainLogics;
 using DevExpress.ExpressApp.Model.NodeGenerators;
 using DevExpress.Xpo;
 using DevExpress.ExpressApp.Xpo;
+using XafSmartEditors.Razor.RagChat;
 
 namespace XafSmartEditors.Module;
 
 // For more typical usage scenarios, be sure to check out https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.ModuleBase.
 public sealed class XafSmartEditorsModule : ModuleBase {
     public XafSmartEditorsModule() {
-		// 
-		// XafSmartEditorsModule
-		// 
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.ModelDifference));
-		AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.ModelDifferenceAspect));
+        // 
+        // XafSmartEditorsModule
+        // 
+
+        AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.ModelDifference));
+        AdditionalExportedTypes.Add(typeof(IRagDataImp));
+        AdditionalExportedTypes.Add(typeof(ChatView));
+        AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.ModelDifferenceAspect));
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.BaseObject));
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.FileData));
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.FileAttachmentBase));

@@ -28,16 +28,31 @@
     }
 </style>
 
- @inject IRagData RagData;
+
+
 
 @code {
+
+    IRagData _value;
+    [Parameter]
+    public IRagData Value
+    {
+        get
+        {
+            return _value;
+        }
+        set
+        {
+            _value = value;
+        }
+    }
     
     async Task Initialized(IAIChat chat)
     {
         await chat.UseAssistantAsync(new OpenAIAssistantOptions(
-            this.RagData.FileName,
-           this.RagData.FileContent,
-            this.RagData.Prompt)
+            this.Value.FileName,
+           this.Value.FileContent,
+            this.Value.Prompt)
         );
     }
 
