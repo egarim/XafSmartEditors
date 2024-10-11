@@ -125,19 +125,6 @@ public class Startup {
                 config.RegisterChatClientOpenAIService(clientOpenAi, aiSettings.Model);
                 config.RegisterOpenAIAssistants(clientOpenAi, aiSettings.Model);
 
-
-                config.AddBlazorReportingAIIntegration(config =>
-                {
-                    config.SummarizeBehavior = SummarizeBehavior.Abstractive;
-                    config.AvailabelLanguages = new List<LanguageItem>() {
-                        new LanguageItem() { Key = "de", Text = "German" },
-                        new LanguageItem() { Key = "es", Text = "Spanish" },
-                        new LanguageItem() { Key = "en", Text = "English" },
-                        new LanguageItem() { Key = "ru", Text = "Russian" },
-                        new LanguageItem() { Key = "it", Text = "Italian" }
-                    };
-                });
-
             }
             if (aiSettings.Service.ToLower() == "Azure")
             {
@@ -146,10 +133,22 @@ public class Startup {
                     new AzureKeyCredential(aiSettings.Key));
                 config.RegisterChatClientOpenAIService(clientAzure, aiSettings.Model);
                 config.RegisterOpenAIAssistants(clientAzure, aiSettings.Model);
+
+
             }
 
 
-
+            config.AddBlazorReportingAIIntegration(config =>
+            {
+                config.SummarizeBehavior = SummarizeBehavior.Abstractive;
+                config.AvailabelLanguages = new List<LanguageItem>() {
+                        new LanguageItem() { Key = "de", Text = "German" },
+                        new LanguageItem() { Key = "es", Text = "Spanish" },
+                        new LanguageItem() { Key = "en", Text = "English" },
+                        new LanguageItem() { Key = "ru", Text = "Russian" },
+                        new LanguageItem() { Key = "it", Text = "Italian" }
+                    };
+            });
 
 
         });
