@@ -9,6 +9,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Data\Categories.txt" />
     <None Remove="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>
@@ -43,5 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XafSmartEditors.Razor\XafSmartEditors.Razor.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Categories.txt" />
   </ItemGroup>
 </Project>

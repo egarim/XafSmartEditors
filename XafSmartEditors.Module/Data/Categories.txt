@@ -1,0 +1,10 @@
+﻿F001;Fruits;Foods that are naturally sweet or sour and are typically eaten raw or used in desserts and drinks;
+F002;Vegetables;Edible plant parts that are often consumed cooked or raw in salads or side dishes;
+F003;Grains;Staple foods made from cereal crops like wheat, rice, oats, and corn, typically used to make bread, pasta, and cereals;
+F004;Dairy;Products made from milk, such as cheese, yogurt, and butter, rich in calcium and protein;
+F005;Meat;Animal flesh consumed as food, including beef, chicken, pork, and lamb;
+F006;Seafood;Fish and shellfish that are harvested from oceans, rivers, or lakes and consumed as food;
+F007;Legumes;Edible seeds from plants in the legume family, such as beans, lentils, and peas, high in protein and fiber;
+F008;Nuts and Seeds;Edible seeds and fruits with hard shells that are rich in fats and nutrients, such as almonds, walnuts, and chia seeds;
+F009;Sweets;Confections and sugary treats, including candies, chocolates, and desserts like cakes and pastries;
+F010;Beverages;Drinks consumed for hydration or enjoyment, including water, juices, coffee, tea, and sodas

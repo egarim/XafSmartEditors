@@ -13,6 +13,8 @@ using Azure;
 using DevExpress.AIIntegration;
 using OpenAI;
 using XafSmartEditors.Module;
+using DevExpress.AIIntegration.Reporting;
+using DevExpress.AIIntegration.Blazor.Reporting.Viewer.Models;
 
 namespace XafSmartEditors.Blazor.Server;
 
@@ -122,6 +124,20 @@ public class Startup {
                 var clientOpenAi = new OpenAIClient(new System.ClientModel.ApiKeyCredential(aiSettings.Key));
                 config.RegisterChatClientOpenAIService(clientOpenAi, aiSettings.Model);
                 config.RegisterOpenAIAssistants(clientOpenAi, aiSettings.Model);
+
+
+                config.AddBlazorReportingAIIntegration(config =>
+                {
+                    config.SummarizeBehavior = SummarizeBehavior.Abstractive;
+                    config.AvailabelLanguages = new List<LanguageItem>() {
+                        new LanguageItem() { Key = "de", Text = "German" },
+                        new LanguageItem() { Key = "es", Text = "Spanish" },
+                        new LanguageItem() { Key = "en", Text = "English" },
+                        new LanguageItem() { Key = "ru", Text = "Russian" },
+                        new LanguageItem() { Key = "it", Text = "Italian" }
+                    };
+                });
+
             }
             if (aiSettings.Service.ToLower() == "Azure")
             {

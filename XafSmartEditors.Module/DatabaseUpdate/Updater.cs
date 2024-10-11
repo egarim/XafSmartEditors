@@ -11,6 +11,7 @@ using DevExpress.Persistent.BaseImpl;
 using DevExpress.Persistent.BaseImpl.PermissionPolicy;
 using XafSmartEditors.Module.BusinessObjects;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace XafSmartEditors.Module.DatabaseUpdate;
 
@@ -18,6 +19,18 @@ namespace XafSmartEditors.Module.DatabaseUpdate;
 public class Updater : ModuleUpdater {
     public Updater(IObjectSpace objectSpace, Version currentDBVersion) :
         base(objectSpace, currentDBVersion) {
+    }
+
+    string ReadSource(string resourceName)
+    {
+        
+
+        using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+        using (StreamReader reader = new StreamReader(stream))
+        {
+            return reader.ReadToEnd();
+          
+        }
     }
     public override void UpdateDatabaseAfterUpdateSchema() {
         base.UpdateDatabaseAfterUpdateSchema();
@@ -57,6 +70,22 @@ public class Updater : ModuleUpdater {
                 // Add the Administrators role to the user
                 user.Roles.Add(adminRole);
             });
+        }
+
+        string BasePath = "XafSmartEditors.Module.Data.";
+
+
+        if (ObjectSpace.GetObjectsCount(typeof(Category), null) == 0)
+        {
+            var Categories = ReadSource(BasePath + "Categories.txt").Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None); ;
+            foreach (var item in Categories)
+            {
+                var Segments = item.Split(';');
+                var Cat = this.ObjectSpace.CreateObject<Category>();
+                Cat.Code = Segments[0];
+                Cat.Name = Segments[1];
+                Cat.Description = Segments[2];  
+            }
         }
 
         ObjectSpace.CommitChanges(); //This line persists created object(s).
