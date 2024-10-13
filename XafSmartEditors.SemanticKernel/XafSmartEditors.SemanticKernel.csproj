@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="DevExpress.ExpressApp.Xpo" Version="24.2.1-alpha-24260" />
+		<PackageReference Include="Microsoft.KernelMemory.Abstractions" Version="0.78.241007.1" />
+		<PackageReference Include="Microsoft.KernelMemory.Core" Version="0.78.241007.1" />
+		<PackageReference Include="Microsoft.SemanticKernel" Version="1.21.1" />
+	</ItemGroup>
+</Project>

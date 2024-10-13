@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XafSmartEditors.Win", "XafS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XafSmartEditors.Blazor.Server", "XafSmartEditors.Blazor.Server\XafSmartEditors.Blazor.Server.csproj", "{A960F27F-E0E4-4204-835E-E5E200F152FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XafSmartEditors.Razor", "XafSmartEditors.Razor\XafSmartEditors.Razor.csproj", "{788FCDE2-AC3D-45DD-A6DA-989FEBE90BF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XafSmartEditors.Razor", "XafSmartEditors.Razor\XafSmartEditors.Razor.csproj", "{788FCDE2-AC3D-45DD-A6DA-989FEBE90BF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XafSmartEditors.SemanticKernel", "XafSmartEditors.SemanticKernel\XafSmartEditors.SemanticKernel.csproj", "{29225432-1FA1-4B2B-B453-7997DE692AB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,12 @@ Global
 		{788FCDE2-AC3D-45DD-A6DA-989FEBE90BF8}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
 		{788FCDE2-AC3D-45DD-A6DA-989FEBE90BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{788FCDE2-AC3D-45DD-A6DA-989FEBE90BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29225432-1FA1-4B2B-B453-7997DE692AB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29225432-1FA1-4B2B-B453-7997DE692AB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29225432-1FA1-4B2B-B453-7997DE692AB9}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
+		{29225432-1FA1-4B2B-B453-7997DE692AB9}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
+		{29225432-1FA1-4B2B-B453-7997DE692AB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29225432-1FA1-4B2B-B453-7997DE692AB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
