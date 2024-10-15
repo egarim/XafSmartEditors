@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using DevExpress.Xpo;
+using DocumentFormat.OpenXml.Spreadsheet;
+using XafSmartEditors.SemanticKernel.Memory;
 
 namespace Microsoft.SemanticKernel.Connectors.Xpo;
 
@@ -26,81 +28,82 @@ internal sealed class XpoDatabase
         return Task.CompletedTask;
     }
 
-    public async Task CreateCollectionAsync(IDataLayer conn, string collectionName, CancellationToken cancellationToken = default)
+    public async Task CreateCollectionAsync(IXpoEntryManager xpoEntryManager, string collectionName, CancellationToken cancellationToken = default)
     {
-        if (await this.DoesCollectionExistsAsync(conn, collectionName, cancellationToken).ConfigureAwait(false))
+        if (await this.DoesCollectionExistsAsync(xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false))
         {
             // Collection already exists
             return;
         }
 
-        UnitOfWork unitOfWork = new(conn);
-        XpoDatabaseEntry entry = new(unitOfWork)
-        {
-            Collection = collectionName
-        };
-        await unitOfWork.CommitChangesAsync(cancellationToken).ConfigureAwait(false);
+    
+        XpoDatabaseEntry entry = xpoEntryManager.CreateObject<XpoDatabaseEntry>();
+        
+        entry.Collection = collectionName;
+        //await unitOfWork.CommitChangesAsync(cancellationToken).ConfigureAwait(false);
+        xpoEntryManager.Commit();
+       
 
 
     }
 
-    public async Task UpdateAsync(IDataLayer conn,
+    public async Task UpdateAsync(IXpoEntryManager xpoEntryManager,
         string collection, string key, string? metadata, string? embedding, string? timestamp, CancellationToken cancellationToken = default)
     {
-        UnitOfWork unitOfWork = new(conn);
-        var entry = unitOfWork.Query<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collection && x.Key == key);
+       
+        var entry = xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collection && x.Key == key);
         if (entry != null)
         {
             entry.MetadataString = metadata ?? string.Empty;
             entry.EmbeddingString = embedding ?? string.Empty;
             entry.Timestamp = timestamp ?? string.Empty;
-            await unitOfWork.CommitChangesAsync(cancellationToken).ConfigureAwait(false);
+            xpoEntryManager.Commit();
         }
     }
 
-    public async Task InsertOrIgnoreAsync(IDataLayer conn,
+    public async Task InsertOrIgnoreAsync(IXpoEntryManager xpoEntryManager,
         string collection, string key, string? metadata, string? embedding, string? timestamp, CancellationToken cancellationToken = default)
     {
-        UnitOfWork unitOfWork = new(conn);
-        if (unitOfWork.Query<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collection && x.Key == key) == null)
+       
+        if (xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collection && x.Key == key) == null)
         {
-            XpoDatabaseEntry entry = new(unitOfWork)
-            {
-                Collection = collection,
-                Key = key,
-                MetadataString = metadata ?? string.Empty,
-                EmbeddingString = embedding ?? string.Empty,
-                Timestamp = timestamp ?? string.Empty
-            };
-            await unitOfWork.CommitChangesAsync(cancellationToken).ConfigureAwait(false);
+            XpoDatabaseEntry entry = xpoEntryManager.CreateObject<XpoDatabaseEntry>();
+            entry.Collection = collection;
+            entry.Key = key;
+            entry.MetadataString = metadata ?? string.Empty;
+            entry.EmbeddingString = embedding ?? string.Empty;
+            entry.Timestamp = timestamp ?? string.Empty;
+            //await unitOfWork.CommitChangesAsync(cancellationToken).ConfigureAwait(false);
+            xpoEntryManager.Commit();
         }
     }
 
-    public async Task<bool> DoesCollectionExistsAsync(IDataLayer conn,
+    public async Task<bool> DoesCollectionExistsAsync(IXpoEntryManager xpoEntryManager,
         string collectionName,
         CancellationToken cancellationToken = default)
     {
-        var collections = await this.GetCollectionsAsync(conn, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        var collections = await this.GetCollectionsAsync(xpoEntryManager, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
         return collections.Contains(collectionName);
     }
 
-    public async IAsyncEnumerable<string> GetCollectionsAsync(IDataLayer conn,
+    public async IAsyncEnumerable<string> GetCollectionsAsync(IXpoEntryManager xpoEntryManager,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        UnitOfWork unitOfWork = new(conn);
-        var Collections = unitOfWork.Query<XpoDatabaseEntry>().Select(x => x.Collection).Distinct().ToList();
+      
+
+        var Collections = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Select(x => x.Collection).Distinct().ToList();
         foreach (string collection in Collections)
         {
             yield return collection;
         }
     }
 
-    public async IAsyncEnumerable<DatabaseEntry> ReadAllAsync(IDataLayer conn,
+    public async IAsyncEnumerable<DatabaseEntry> ReadAllAsync(IXpoEntryManager xpoEntryManager,
         string collectionName,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        UnitOfWork unitOfWork = new(conn);
-        var entries = unitOfWork.Query<XpoDatabaseEntry>().Where(x => x.Collection == collectionName).ToList();
+        
+        var entries = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Where(x => x.Collection == collectionName).ToList();
         foreach (XpoDatabaseEntry entry in entries)
         {
             yield return entry.ToDatabaseEntry();
@@ -121,39 +124,39 @@ internal sealed class XpoDatabase
         return null;
     }
 
-    public Task DeleteCollectionAsync(IDataLayer conn, string collectionName, CancellationToken cancellationToken = default)
+    public Task DeleteCollectionAsync(IXpoEntryManager xpoEntryManager, string collectionName, CancellationToken cancellationToken = default)
     {
-        UnitOfWork unitOfWork = new(conn);
-        var entries = unitOfWork.Query<XpoDatabaseEntry>().Where(x => x.Collection == collectionName).ToList();
+       
+        var entries = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Where(x => x.Collection == collectionName).ToList();
         foreach (XpoDatabaseEntry entry in entries)
         {
-            unitOfWork.Delete(entry);
+            xpoEntryManager.Delete(entry);
         }
-        unitOfWork.CommitChanges();
+        xpoEntryManager.Commit();
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(IDataLayer conn, string collectionName, string key, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(IXpoEntryManager xpoEntryManager, string collectionName, string key, CancellationToken cancellationToken = default)
     {
-        UnitOfWork unitOfWork = new(conn);
-        var entry = unitOfWork.Query<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
+        
+        var entry = xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
         if (entry != null)
         {
-            unitOfWork.Delete(entry);
-            unitOfWork.CommitChanges();
+            xpoEntryManager.Delete(entry);
+            xpoEntryManager.Commit();
         }
         return Task.CompletedTask;
     }
 
-    public Task DeleteEmptyAsync(IDataLayer conn, string collectionName, CancellationToken cancellationToken = default)
+    public Task DeleteEmptyAsync(IXpoEntryManager xpoEntryManager, string collectionName, CancellationToken cancellationToken = default)
     {
-        UnitOfWork unitOfWork = new(conn);
-        var entries = unitOfWork.Query<XpoDatabaseEntry>().Where(x => x.Collection == collectionName && x.Key == null).ToList();
+        
+        var entries = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Where(x => x.Collection == collectionName && x.Key == null).ToList();
 
         if (entries != null)
         {
-            unitOfWork.Delete(entries);
-            return unitOfWork.CommitChangesAsync(cancellationToken);
+            xpoEntryManager.Delete(entries);
+            xpoEntryManager.Commit();
         }
         return Task.CompletedTask;
     }

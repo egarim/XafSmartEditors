@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XafSmartEditors.Blazor.Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XafSmartEditors.Razor", "XafSmartEditors.Razor\XafSmartEditors.Razor.csproj", "{788FCDE2-AC3D-45DD-A6DA-989FEBE90BF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XafSmartEditors.SemanticKernel", "XafSmartEditors.SemanticKernel\XafSmartEditors.SemanticKernel.csproj", "{29225432-1FA1-4B2B-B453-7997DE692AB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XafSmartEditors.SemanticKernel", "XafSmartEditors.SemanticKernel\XafSmartEditors.SemanticKernel.csproj", "{29225432-1FA1-4B2B-B453-7997DE692AB9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sk", "Sk", "{9CD6EFF0-14F6-49ED-B749-EC644A2CD3D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3378BE92-4F44-4AFB-B76F-997C59AC7A05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,9 +54,19 @@ Global
 		{29225432-1FA1-4B2B-B453-7997DE692AB9}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
 		{29225432-1FA1-4B2B-B453-7997DE692AB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29225432-1FA1-4B2B-B453-7997DE692AB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3378BE92-4F44-4AFB-B76F-997C59AC7A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3378BE92-4F44-4AFB-B76F-997C59AC7A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3378BE92-4F44-4AFB-B76F-997C59AC7A05}.EasyTest|Any CPU.ActiveCfg = Debug|Any CPU
+		{3378BE92-4F44-4AFB-B76F-997C59AC7A05}.EasyTest|Any CPU.Build.0 = Debug|Any CPU
+		{3378BE92-4F44-4AFB-B76F-997C59AC7A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3378BE92-4F44-4AFB-B76F-997C59AC7A05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{29225432-1FA1-4B2B-B453-7997DE692AB9} = {9CD6EFF0-14F6-49ED-B749-EC644A2CD3D6}
+		{3378BE92-4F44-4AFB-B76F-997C59AC7A05} = {9CD6EFF0-14F6-49ED-B749-EC644A2CD3D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {437A6F90-640D-46F8-8029-5DA79D7EA6B6}

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-namespace XafSmartEditors.SemanticKernel
+namespace XafSmartEditors.SemanticKernel.Memory
 {
     // <summary>Caches common configurations of <see cref="JsonSerializerOptions"/>.</summary>\
     /// <remarks>

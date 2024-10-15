@@ -9,10 +9,11 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using DevExpress.ExpressApp;
 using DevExpress.Xpo;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Text;
-using XafSmartEditors.SemanticKernel;
+using XafSmartEditors.SemanticKernel.Memory;
 
 namespace Microsoft.SemanticKernel.Connectors.Xpo;
 #pragma warning disable SKEXP0001
@@ -24,35 +25,39 @@ namespace Microsoft.SemanticKernel.Connectors.Xpo;
 /// </remarks>
 public class XpoMemoryStore : IMemoryStore, IDisposable
 {
+   
     /// <summary>
     /// Connect a XPO database
     /// </summary>
-    /// <param name="cnx">The XPO connection string. If database does not exist, it will be created.</param>
+    /// <param name="cnx">.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-    public static async Task<XpoMemoryStore> ConnectAsync(string cnx,
+    public static async Task<XpoMemoryStore> ConnectAsync(IXpoEntryManager  xpoEntryManager,
         CancellationToken cancellationToken = default)
     {
-        var memoryStore = new XpoMemoryStore(cnx);
-        await memoryStore._dbConnector.CreateTableAsync(memoryStore._dataLayer, cancellationToken).ConfigureAwait(false);
+        var memoryStore = new XpoMemoryStore(xpoEntryManager);
+       
+        //TODO fix create table method
+        //await memoryStore._dbConnector.CreateTableAsync(memoryStore._dataLayer, cancellationToken).ConfigureAwait(false);
         return memoryStore;
     }
 
+   
     /// <inheritdoc/>
     public async Task CreateCollectionAsync(string collectionName, CancellationToken cancellationToken = default)
     {
-        await this._dbConnector.CreateCollectionAsync(this._dataLayer, collectionName, cancellationToken).ConfigureAwait(false);
+        await this._dbConnector.CreateCollectionAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
     public async Task<bool> DoesCollectionExistAsync(string collectionName, CancellationToken cancellationToken = default)
     {
-        return await this._dbConnector.DoesCollectionExistsAsync(this._dataLayer, collectionName, cancellationToken).ConfigureAwait(false);
+        return await this._dbConnector.DoesCollectionExistsAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<string> GetCollectionsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (var collection in this._dbConnector.GetCollectionsAsync(this._dataLayer, cancellationToken).ConfigureAwait(false))
+        await foreach (var collection in this._dbConnector.GetCollectionsAsync(this.xpoEntryManager, cancellationToken).ConfigureAwait(false))
         {
             yield return collection;
         }
@@ -61,13 +66,13 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
     /// <inheritdoc/>
     public async Task DeleteCollectionAsync(string collectionName, CancellationToken cancellationToken = default)
     {
-        await this._dbConnector.DeleteCollectionAsync(this._dataLayer, collectionName, cancellationToken).ConfigureAwait(false);
+        await this._dbConnector.DeleteCollectionAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
     public async Task<string> UpsertAsync(string collectionName, MemoryRecord record, CancellationToken cancellationToken = default)
     {
-        return await this.InternalUpsertAsync(this._dataLayer, collectionName, record, cancellationToken).ConfigureAwait(false);
+        return await this.InternalUpsertAsync(this.xpoEntryManager, collectionName, record, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -76,14 +81,14 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
     {
         foreach (var record in records)
         {
-            yield return await this.InternalUpsertAsync(this._dataLayer, collectionName, record, cancellationToken).ConfigureAwait(false);
+            yield return await this.InternalUpsertAsync(this.xpoEntryManager, collectionName, record, cancellationToken).ConfigureAwait(false);
         }
     }
 
     /// <inheritdoc/>
     public async Task<MemoryRecord?> GetAsync(string collectionName, string key, bool withEmbedding = false, CancellationToken cancellationToken = default)
     {
-        return await this.InternalGetAsync(this._dataLayer, collectionName, key, withEmbedding, cancellationToken).ConfigureAwait(false);
+        return await this.InternalGetAsync(this.xpoEntryManager, collectionName, key, withEmbedding, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -92,7 +97,7 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
     {
         foreach (var key in keys)
         {
-            var result = await this.InternalGetAsync(this._dataLayer, collectionName, key, withEmbeddings, cancellationToken).ConfigureAwait(false);
+            var result = await this.InternalGetAsync(this.xpoEntryManager, collectionName, key, withEmbeddings, cancellationToken).ConfigureAwait(false);
             if (result != null)
             {
                 yield return result;
@@ -107,13 +112,13 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
     /// <inheritdoc/>
     public async Task RemoveAsync(string collectionName, string key, CancellationToken cancellationToken = default)
     {
-        await this._dbConnector.DeleteAsync(this._dataLayer, collectionName, key, cancellationToken).ConfigureAwait(false);
+        await this._dbConnector.DeleteAsync(this.xpoEntryManager, collectionName, key, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
     public async Task RemoveBatchAsync(string collectionName, IEnumerable<string> keys, CancellationToken cancellationToken = default)
     {
-        await Task.WhenAll(keys.Select(k => this._dbConnector.DeleteAsync(this._dataLayer, collectionName, k, cancellationToken))).ConfigureAwait(false);
+        await Task.WhenAll(keys.Select(k => this._dbConnector.DeleteAsync(this.xpoEntryManager, collectionName, k, cancellationToken))).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
@@ -183,7 +188,7 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
         {
             if (disposing)
             {
-                this._dataLayer.Dispose();
+                this.xpoEntryManager.Dispose();
             }
 
             this._disposedValue = true;
@@ -195,16 +200,15 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
     #region private ================================================================================
 
     internal readonly XpoDatabase _dbConnector;
-    internal readonly IDataLayer _dataLayer;
+
     private bool _disposedValue;
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    private XpoMemoryStore(string XpoConnectionString)
+
+    IXpoEntryManager xpoEntryManager;
+    private XpoMemoryStore(IXpoEntryManager xpoEntryManager)
     {
         this._dbConnector = new XpoDatabase();
-        this._dataLayer = XpoDefault.GetDataLayer(XpoConnectionString, DevExpress.Xpo.DB.AutoCreateOption.DatabaseAndSchema);
+        this.xpoEntryManager = xpoEntryManager;
         this._disposedValue = false;
     }
 
@@ -227,9 +231,9 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
     private async IAsyncEnumerable<MemoryRecord> GetAllAsync(string collectionName, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         // delete empty entry in the database if it exists (see CreateCollection)
-        await this._dbConnector.DeleteEmptyAsync(this._dataLayer, collectionName, cancellationToken).ConfigureAwait(false);
+        await this._dbConnector.DeleteEmptyAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false);
 
-        await foreach (DatabaseEntry dbEntry in this._dbConnector.ReadAllAsync(this._dataLayer, collectionName, cancellationToken).ConfigureAwait(false))
+        await foreach (DatabaseEntry dbEntry in this._dbConnector.ReadAllAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false))
         {
             ReadOnlyMemory<float> vector = JsonSerializer.Deserialize<ReadOnlyMemory<float>>(dbEntry.EmbeddingString, CustomJsonOptionsCache.Default);
 
@@ -239,13 +243,13 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
         }
     }
 
-    private async Task<string> InternalUpsertAsync(IDataLayer connection, string collectionName, MemoryRecord record, CancellationToken cancellationToken)
+    private async Task<string> InternalUpsertAsync(IXpoEntryManager xpoEntryManager, string collectionName, MemoryRecord record, CancellationToken cancellationToken)
     {
         record.Key = record.Metadata.Id;
 
         // Update
         await this._dbConnector.UpdateAsync(
-            conn: connection,
+            xpoEntryManager: xpoEntryManager,
             collection: collectionName,
             key: record.Key,
             metadata: record.GetSerializedMetadata(),
@@ -255,7 +259,7 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
 
         // Insert if entry does not exists
         await this._dbConnector.InsertOrIgnoreAsync(
-            conn: connection,
+            xpoEntryManager: xpoEntryManager,
             collection: collectionName,
             key: record.Key,
             metadata: record.GetSerializedMetadata(),
@@ -267,13 +271,13 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
     }
 
     private async Task<MemoryRecord?> InternalGetAsync(
-        IDataLayer connection,
+        IXpoEntryManager xpoEntryManager,
         string collectionName,
         string key, bool withEmbedding,
         CancellationToken cancellationToken)
     {
-        UnitOfWork unitOfWork = new(connection);
-        var entry = unitOfWork.Query<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
+       
+        var entry = xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
         if (entry != null)
         {
             if (withEmbedding)

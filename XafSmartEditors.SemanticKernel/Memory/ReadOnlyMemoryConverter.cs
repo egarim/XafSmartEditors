@@ -3,7 +3,7 @@ using System.Text.Json;
 using System;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
-namespace XafSmartEditors.SemanticKernel
+namespace XafSmartEditors.SemanticKernel.Memory
 {
     [ExcludeFromCodeCoverage]
     public sealed class ReadOnlyMemoryConverter : JsonConverter<ReadOnlyMemory<float>>
@@ -20,7 +20,7 @@ namespace XafSmartEditors.SemanticKernel
 
         public override void Write(Utf8JsonWriter writer, ReadOnlyMemory<float> value, JsonSerializerOptions options)
         {
-            s_arrayConverter.Write(writer, (MemoryMarshal.TryGetArray(value, out var segment) && segment.Count == value.Length) ? segment.Array : value.ToArray(), options);
+            s_arrayConverter.Write(writer, MemoryMarshal.TryGetArray(value, out var segment) && segment.Count == value.Length ? segment.Array : value.ToArray(), options);
         }
     }
     // <summary>Caches common configurations of <see cref="JsonSerializerOptions"/>.</summary>\
