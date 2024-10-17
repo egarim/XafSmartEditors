@@ -4,7 +4,7 @@ using System;
 using DevExpress.Xpo;
 
 namespace Microsoft.SemanticKernel.Connectors.Xpo;
-public class XpoDatabaseEntry : XPLiteObject
+public class XpoDatabaseEntry : XPLiteObject, IXpoMemoryEntry
 {
     public XpoDatabaseEntry(Session session) : base(session)
     {

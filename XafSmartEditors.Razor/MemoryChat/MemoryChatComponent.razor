@@ -1,0 +1,107 @@
+﻿@using DevExpress.AIIntegration.OpenAI.Services
+@using DevExpress.AIIntegration.Blazor.Chat
+@using System.Reflection
+@using DevExpress.AIIntegration.Services.Chat
+@using DevExpress.Blazor
+@using Markdig
+@using Microsoft.SemanticKernel.ChatCompletion
+@using System.Diagnostics
+@using Microsoft.SemanticKernel.Memory
+
+<DxAIChat CssClass="my-chat" MessageSent="MessageSent"
+          RenderMode="AnswerRenderMode.Markdown"
+          UseStreaming="true"
+          SizeMode="SizeMode.Medium">
+    <EmptyMessageAreaTemplate>
+        <div class="my-chat-ui-description">
+            <span style="font-weight: bold; color: #008000;">Rag Chat</span> Assistant is ready to answer your questions.
+        </div>
+    </EmptyMessageAreaTemplate>
+    <MessageContentTemplate>
+        <div class="my-chat-content">
+            @ToHtml(context.Content)
+        </div>
+    </MessageContentTemplate>
+</DxAIChat>
+
+<style>
+    .my-chat {
+        width: 680px;
+        margin: 20px;
+        height: 500px;
+    }
+</style>
+
+
+
+
+@code {
+
+
+    #pragma warning disable IDE0039
+#pragma warning disable SKEXP0010
+#pragma warning disable SKEXP0001
+#pragma warning disable SKEXP0050
+
+    IMemoryData _value;
+    [Parameter]
+    public IMemoryData Value
+    {
+        get
+        {
+            return _value;
+        }
+        set
+        {
+            _value = value;
+        }
+    }
+    ChatHistory ChatHistory = new ChatHistory();
+    async Task MessageSent(MessageSentEventArgs args)
+    {
+
+        ChatHistory.AddUserMessage(args.Content);
+
+
+        Debug.WriteLine("Recall (similarity search) with ISemanticTextMemory ==");
+        Debug.WriteLine($"Ask: {args.Content}");
+
+        IAsyncEnumerable<MemoryQueryResult> answers = Value.SemanticTextMemory.SearchAsync(
+                        collection: Value.CollectionName,
+                        query: args.Content,
+                        limit: 1,
+                        minRelevanceScore: Value.MinimumRelevanceScore,
+                        //minRelevanceScore: 0.79, //HACK depending on the model you are using you might need to change this parameter to a lower value I got good results with 0.20
+                        withEmbeddings: true);
+
+        string AnswerValue = "No answer";
+        await foreach (var answer in answers)
+        {
+            AnswerValue = answer.Metadata.Text;
+            Debug.WriteLine($"Answer: {answer.Metadata.Text}");
+        }
+        string MessageContent = "";
+        if (AnswerValue == "No answer")
+        {
+            MessageContent = "There are no memories that contains the requested information";
+        }
+        else
+        {
+            var prompt = $"please format this answer:#{AnswerValue}# to answer this question :#{args.Content}#";
+            var Result = await Value.ChatCompletionService.GetChatMessageContentAsync(prompt);
+            MessageContent = Result.InnerContent.ToString();
+        }
+        
+        Debug.WriteLine(MessageContent);
+        ChatHistory.AddAssistantMessage(MessageContent);
+        var message = new Message(MessageRole.Assistant, MessageContent);
+        args.SendMessage(message);
+    }
+
+
+    MarkupString ToHtml(string text)
+    {
+        return (MarkupString)Markdown.ToHtml(text);
+    }
+
+}

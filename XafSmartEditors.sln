@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XafSmartEditors.SemanticKer
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sk", "Sk", "{9CD6EFF0-14F6-49ED-B749-EC644A2CD3D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3378BE92-4F44-4AFB-B76F-997C59AC7A05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{3378BE92-4F44-4AFB-B76F-997C59AC7A05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -15,6 +15,8 @@ using OpenAI;
 using XafSmartEditors.Module;
 using DevExpress.AIIntegration.Reporting;
 using DevExpress.AIIntegration.Blazor.Reporting.Viewer.Models;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel;
 
 namespace XafSmartEditors.Blazor.Server;
 
@@ -151,7 +153,11 @@ public class Startup {
             });
 
 
+
         });
+
+    
+
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

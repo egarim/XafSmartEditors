@@ -14,6 +14,7 @@ using DevExpress.ExpressApp.Model.NodeGenerators;
 using DevExpress.Xpo;
 using DevExpress.ExpressApp.Xpo;
 using XafSmartEditors.Razor.RagChat;
+using XafSmartEditors.Razor.MemoryChat;
 
 namespace XafSmartEditors.Module;
 
@@ -27,6 +28,8 @@ public sealed class XafSmartEditorsModule : ModuleBase {
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.ModelDifference));
         AdditionalExportedTypes.Add(typeof(IRagDataImp));
         AdditionalExportedTypes.Add(typeof(ChatView));
+        AdditionalExportedTypes.Add(typeof(MemoryChatView));
+        AdditionalExportedTypes.Add(typeof(IMemoryDataImp));
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.ModelDifferenceAspect));
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.BaseObject));
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.FileData));
