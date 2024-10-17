@@ -1,7 +1,5 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-namespace Microsoft.SemanticKernel.Connectors.Xpo;
-internal struct DatabaseEntry
+﻿
+public struct DatabaseEntry
 {
     public string Key { get; set; }
 
