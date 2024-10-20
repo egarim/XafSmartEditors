@@ -106,8 +106,8 @@ namespace XafSmartEditors.Module.Controllers
 
             ChatView.Memory = os.CreateObject<IMemoryDataImp>();
             ChatView.Memory.SemanticTextMemory = semanticTextMemory;
+            ChatView.Memory.CollectionName = memoryChat.Name;
             ChatView.Memory.ChatCompletionService = ChatService;
-
 
             DetailView detailView = this.Application.CreateDetailView(os, ChatView);
 
