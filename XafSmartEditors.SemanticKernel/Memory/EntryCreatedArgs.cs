@@ -6,7 +6,7 @@ namespace XafSmartEditors.SemanticKernel.Memory
     public class EntryCreatedArgs : EventArgs
     {
 
-        object instance;
+        public object instance;
         public EntryCreatedArgs(object instance)
         {
 

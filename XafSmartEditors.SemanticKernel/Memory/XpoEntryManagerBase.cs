@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SemanticKernel.Connectors.Xpo;
+using System;
 using System.Linq;
 
 namespace XafSmartEditors.SemanticKernel.Memory
@@ -6,18 +7,18 @@ namespace XafSmartEditors.SemanticKernel.Memory
     public class XpoEntryManagerBase : IXpoEntryManager
     {
 
-        protected virtual void OnObjectCreated(EventArgs e)
+        protected virtual void OnObjectCreated(EntryCreatedArgs e)
         {
             ObjectCreatedEvent?.Invoke(this, e);
 
         }
-        public event EventHandler ObjectCreatedEvent;
+        public event EventHandler<EntryCreatedArgs> ObjectCreatedEvent;
 
-        public virtual T CreateObject<T>()
+        public virtual IXpoMemoryEntry CreateObject()
         {
             throw new NotImplementedException();
         }
-        public virtual IQueryable<T> GetQuery<T>(bool inTransaction = true)
+        public virtual IQueryable<IXpoMemoryEntry> GetQuery(bool inTransaction = true)
         {
             throw new NotImplementedException();
         }

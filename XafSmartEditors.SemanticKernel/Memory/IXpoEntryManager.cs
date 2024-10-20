@@ -1,4 +1,5 @@
 ﻿using DevExpress.ExpressApp;
+using Microsoft.SemanticKernel.Connectors.Xpo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace XafSmartEditors.SemanticKernel.Memory
 {
     public interface IXpoEntryManager
     {
-        T CreateObject<T>();
-        public event EventHandler ObjectCreatedEvent;
+        IXpoMemoryEntry CreateObject();
+        public event EventHandler<EntryCreatedArgs> ObjectCreatedEvent;
         void Commit();
-        IQueryable<T> GetQuery<T>(bool inTransaction = true);
+        IQueryable<IXpoMemoryEntry> GetQuery(bool inTransaction = true);
         void Delete(object Instance);
         void Dispose();
 

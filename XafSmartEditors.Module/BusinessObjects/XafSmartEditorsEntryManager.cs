@@ -1,25 +1,29 @@
 ﻿using DevExpress.ExpressApp;
-using Microsoft.SemanticKernel.Connectors.Xpo;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using XafSmartEditors.SemanticKernel.Memory;
 
-namespace XafSmartEditors.SemanticKernel.Memory
+namespace XafSmartEditors.Module.BusinessObjects
 {
-    public class XafEntryManager : XpoEntryManagerBase, IXpoEntryManager
+    public class XafSmartEditorsEntryManager : XpoEntryManagerBase, IXpoEntryManager
     {
         IObjectSpace objectSpace;
-        public XafEntryManager(IObjectSpace objectSpace)
+        public XafSmartEditorsEntryManager(IObjectSpace objectSpace)
         {
             this.objectSpace = objectSpace;
+           
         }
 
-        public override IQueryable<XpoDatabaseEntry> GetQuery(bool inTransaction = true)
+        public override IQueryable<MemoryEntry> GetQuery(bool inTransaction = true)
         {
-            return objectSpace.GetObjectsQuery<XpoDatabaseEntry>(inTransaction);
+            return objectSpace.GetObjectsQuery<MemoryEntry>(inTransaction);
         }
-        public override XpoDatabaseEntry CreateObject()
+        public override MemoryEntry CreateObject()
         {
-            var Instance = objectSpace.CreateObject<XpoDatabaseEntry>();
+            var Instance = objectSpace.CreateObject<MemoryEntry>();
 
 
             OnObjectCreated(new EntryCreatedArgs(Instance));

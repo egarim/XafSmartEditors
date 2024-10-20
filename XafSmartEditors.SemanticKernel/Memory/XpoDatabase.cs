@@ -36,8 +36,8 @@ internal sealed class XpoDatabase
             return;
         }
 
-    
-        XpoDatabaseEntry entry = xpoEntryManager.CreateObject<XpoDatabaseEntry>();
+
+        IXpoMemoryEntry entry = xpoEntryManager.CreateObject();
         
         entry.Collection = collectionName;
         //await unitOfWork.CommitChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -51,7 +51,7 @@ internal sealed class XpoDatabase
         string collection, string key, string? metadata, string? embedding, string? timestamp, CancellationToken cancellationToken = default)
     {
        
-        var entry = xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collection && x.Key == key);
+        var entry = xpoEntryManager.GetQuery().FirstOrDefault(x => x.Collection == collection && x.Key == key);
         if (entry != null)
         {
             entry.MetadataString = metadata ?? string.Empty;
@@ -65,9 +65,9 @@ internal sealed class XpoDatabase
         string collection, string key, string? metadata, string? embedding, string? timestamp, CancellationToken cancellationToken = default)
     {
        
-        if (xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collection && x.Key == key) == null)
+        if (xpoEntryManager.GetQuery().FirstOrDefault(x => x.Collection == collection && x.Key == key) == null)
         {
-            XpoDatabaseEntry entry = xpoEntryManager.CreateObject<XpoDatabaseEntry>();
+            IXpoMemoryEntry entry = xpoEntryManager.CreateObject();
             entry.Collection = collection;
             entry.Key = key;
             entry.MetadataString = metadata ?? string.Empty;
@@ -91,7 +91,7 @@ internal sealed class XpoDatabase
     {
       
 
-        var Collections = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Select(x => x.Collection).Distinct().ToList();
+        var Collections = xpoEntryManager.GetQuery().Select(x => x.Collection).Distinct().ToList();
         foreach (string collection in Collections)
         {
             yield return collection;
@@ -103,7 +103,7 @@ internal sealed class XpoDatabase
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         
-        var entries = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Where(x => x.Collection == collectionName).ToList();
+        var entries = xpoEntryManager.GetQuery().Where(x => x.Collection == collectionName).ToList();
         foreach (XpoDatabaseEntry entry in entries)
         {
             yield return entry.ToDatabaseEntry();
@@ -127,7 +127,7 @@ internal sealed class XpoDatabase
     public Task DeleteCollectionAsync(IXpoEntryManager xpoEntryManager, string collectionName, CancellationToken cancellationToken = default)
     {
        
-        var entries = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Where(x => x.Collection == collectionName).ToList();
+        var entries = xpoEntryManager.GetQuery().Where(x => x.Collection == collectionName).ToList();
         foreach (XpoDatabaseEntry entry in entries)
         {
             xpoEntryManager.Delete(entry);
@@ -139,7 +139,7 @@ internal sealed class XpoDatabase
     public Task DeleteAsync(IXpoEntryManager xpoEntryManager, string collectionName, string key, CancellationToken cancellationToken = default)
     {
         
-        var entry = xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
+        var entry = xpoEntryManager.GetQuery().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
         if (entry != null)
         {
             xpoEntryManager.Delete(entry);
@@ -151,7 +151,7 @@ internal sealed class XpoDatabase
     public Task DeleteEmptyAsync(IXpoEntryManager xpoEntryManager, string collectionName, CancellationToken cancellationToken = default)
     {
         
-        var entries = xpoEntryManager.GetQuery<XpoDatabaseEntry>().Where(x => x.Collection == collectionName && x.Key == null).ToList();
+        var entries = xpoEntryManager.GetQuery().Where(x => x.Collection == collectionName && x.Key == null).ToList();
 
         if (entries != null)
         {

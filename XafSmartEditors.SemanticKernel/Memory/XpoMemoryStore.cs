@@ -277,7 +277,7 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
         CancellationToken cancellationToken)
     {
        
-        var entry = xpoEntryManager.GetQuery<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
+        var entry = xpoEntryManager.GetQuery().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
         if (entry != null)
         {
             if (withEmbedding)
