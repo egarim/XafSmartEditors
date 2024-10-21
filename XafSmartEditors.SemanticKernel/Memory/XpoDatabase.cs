@@ -104,7 +104,7 @@ internal sealed class XpoDatabase
     {
         
         var entries = xpoEntryManager.GetQuery().Where(x => x.Collection == collectionName).ToList();
-        foreach (XpoDatabaseEntry entry in entries)
+        foreach (var entry in entries)
         {
             yield return entry.ToDatabaseEntry();
         }

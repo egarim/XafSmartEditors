@@ -4,7 +4,7 @@ namespace Microsoft.SemanticKernel.Connectors.Xpo;
 
 internal static class DatabaseEntryExtensions
 {
-    public static DatabaseEntry ToDatabaseEntry(this XpoDatabaseEntry xpoEntry)
+    public static DatabaseEntry ToDatabaseEntry(this IXpoMemoryEntry xpoEntry)
     {
         return new DatabaseEntry
         {

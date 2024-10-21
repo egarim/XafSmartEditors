@@ -87,7 +87,7 @@
         }
         else
         {
-            var prompt = $"please format this answer:#{AnswerValue}# to answer this question :#{args.Content}#";
+            var prompt = $"you are an assistant that is being query for information,use this data:#{AnswerValue}# to answer this question :#{args.Content}#";
             var Result = await Value.ChatCompletionService.GetChatMessageContentAsync(prompt);
             MessageContent = Result.InnerContent.ToString();
         }
