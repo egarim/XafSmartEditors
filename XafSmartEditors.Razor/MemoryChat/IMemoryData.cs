@@ -20,6 +20,7 @@ namespace XafSmartEditors.Razor.MemoryChat
         string CollectionName { get; set; }
         string Prompt { get; set; }
         double MinimumRelevanceScore { get; set; }
+        int ResultLimit { get; set; }
 
 
     }

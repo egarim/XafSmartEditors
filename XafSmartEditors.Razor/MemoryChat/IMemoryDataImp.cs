@@ -37,6 +37,7 @@ namespace XafSmartEditors.Razor.MemoryChat
         public Guid Oid { get; set; }
 
 
+        int resultLimit;
         double minimumRelevanceScore;
         string collectionName;
         IChatCompletionService chatCompletionService;
@@ -95,7 +96,7 @@ namespace XafSmartEditors.Razor.MemoryChat
             }
         }
 
-        
+
         public double MinimumRelevanceScore
         {
             get => minimumRelevanceScore;
@@ -104,6 +105,18 @@ namespace XafSmartEditors.Razor.MemoryChat
                 if (minimumRelevanceScore == value)
                     return;
                 minimumRelevanceScore = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public int ResultLimit
+        {
+            get => resultLimit;
+            set
+            {
+                if (resultLimit == value)
+                    return;
+                resultLimit = value;
                 OnPropertyChanged();
             }
         }

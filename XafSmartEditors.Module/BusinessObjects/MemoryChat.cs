@@ -32,9 +32,11 @@ namespace XafSmartEditors.Module.BusinessObjects
         {
             base.AfterConstruction();
             this.MinimumRelevanceScore = 0.20;
+            this.ResultLimit = 5;
             // Place your initialization code here (https://docs.devexpress.com/eXpressAppFramework/112834/getting-started/in-depth-tutorial-winforms-webforms/business-model-design/initialize-a-property-after-creating-an-object-xpo?v=22.1).
         }
 
+        int resultLimit;
         double minimumRelevanceScore;
         string name;
 
@@ -45,6 +47,11 @@ namespace XafSmartEditors.Module.BusinessObjects
             set => SetPropertyValue(nameof(Name), ref name, value);
         }
         
+        public int ResultLimit
+        {
+            get => resultLimit;
+            set => SetPropertyValue(nameof(ResultLimit), ref resultLimit, value);
+        }
         public double MinimumRelevanceScore
         {
             get => minimumRelevanceScore;

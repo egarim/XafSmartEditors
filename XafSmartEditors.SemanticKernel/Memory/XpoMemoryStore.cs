@@ -214,7 +214,8 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
 
     private static string? ToTimestampString(DateTimeOffset? timestamp)
     {
-        return timestamp?.ToString("u", CultureInfo.InvariantCulture);
+        string? v = timestamp?.ToString("u", CultureInfo.InvariantCulture);
+        return v;
     }
 
     private static DateTimeOffset? ParseTimestamp(string? str)

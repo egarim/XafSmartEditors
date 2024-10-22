@@ -7,11 +7,12 @@
 @using Microsoft.SemanticKernel.ChatCompletion
 @using System.Diagnostics
 @using Microsoft.SemanticKernel.Memory
+@using System.Text
 
-<DxAIChat CssClass="my-chat" MessageSent="MessageSent"
-          RenderMode="AnswerRenderMode.Markdown"
-          UseStreaming="true"
-          SizeMode="SizeMode.Medium">
+<DxAIChat CssClass="my-chat" MessageSent="MessageSent" 
+RenderMode="AnswerRenderMode.Markdown"
+UseStreaming="true"
+SizeMode="SizeMode.Medium">
     <EmptyMessageAreaTemplate>
         <div class="my-chat-ui-description">
             <span style="font-weight: bold; color: #008000;">Rag Chat</span> Assistant is ready to answer your questions.
@@ -26,9 +27,9 @@
 
 <style>
     .my-chat {
-        width: 680px;
-        margin: 20px;
-        height: 500px;
+    width: 680px;
+    margin: 20px;
+    height: 500px;
     }
 </style>
 
@@ -69,17 +70,20 @@
         IAsyncEnumerable<MemoryQueryResult> answers = Value.SemanticTextMemory.SearchAsync(
                         collection: Value.CollectionName,
                         query: args.Content,
-                        limit: 1,
+                        limit: Value.ResultLimit,
                         minRelevanceScore: Value.MinimumRelevanceScore,
                         //minRelevanceScore: 0.79, //HACK depending on the model you are using you might need to change this parameter to a lower value I got good results with 0.20
                         withEmbeddings: true);
 
-        string AnswerValue = "No answer";
+        string AnswerValue = string.Empty;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine("No answer");
         await foreach (var answer in answers)
         {
-            AnswerValue = answer.Metadata.Text;
+            stringBuilder.AppendLine(answer.Metadata.Text);
             Debug.WriteLine($"Answer: {answer.Metadata.Text}");
         }
+        AnswerValue = stringBuilder.ToString();
         string MessageContent = "";
         if (AnswerValue == "No answer")
         {
