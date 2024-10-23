@@ -98,7 +98,7 @@ internal sealed class XpoDatabase
         }
     }
 
-    public async IAsyncEnumerable<DatabaseEntry> ReadAllAsync(IXpoEntryManager xpoEntryManager,
+    public async IAsyncEnumerable<IXpoMemoryEntry> ReadAllAsync(IXpoEntryManager xpoEntryManager,
         string collectionName,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -106,11 +106,11 @@ internal sealed class XpoDatabase
         var entries = xpoEntryManager.GetQuery().Where(x => x.Collection == collectionName).ToList();
         foreach (var entry in entries)
         {
-            yield return entry.ToDatabaseEntry();
+            yield return entry;
         }
     }
 
-    public async Task<DatabaseEntry?> ReadAsync(IDataLayer conn,
+    public async Task<IXpoMemoryEntry?> ReadAsync(IDataLayer conn,
         string collectionName,
         string key,
         CancellationToken cancellationToken = default)
@@ -119,7 +119,7 @@ internal sealed class XpoDatabase
         var entry = unitOfWork.Query<XpoDatabaseEntry>().FirstOrDefault(x => x.Collection == collectionName && x.Key == key);
         if (entry != null)
         {
-            return entry.ToDatabaseEntry();
+            return entry;
         }
         return null;
     }

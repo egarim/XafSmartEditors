@@ -30,8 +30,9 @@ namespace XafSmartEditors.Module.BusinessObjects
             // Place your initialization code here (https://docs.devexpress.com/eXpressAppFramework/112834/getting-started/in-depth-tutorial-winforms-webforms/business-model-design/initialize-a-property-after-creating-an-object-xpo?v=22.1).
         }
 
+        DateTime timestamp;
         MemoryChat memoryChat;
-        string timestamp;
+    
         string metadataString;
         string key;
         string embeddingString;
@@ -65,13 +66,13 @@ namespace XafSmartEditors.Module.BusinessObjects
             set => SetPropertyValue(nameof(MetadataString), ref metadataString, value);
         }
 
-        [Size(SizeAttribute.DefaultStringMappingFieldSize)]
-        public string Timestamp
+        
+        public DateTime Timestamp
         {
             get => timestamp;
             set => SetPropertyValue(nameof(Timestamp), ref timestamp, value);
         }
-        
+
         [Association("MemoryChat-MemoryEntrys")]
         public MemoryChat MemoryChat
         {

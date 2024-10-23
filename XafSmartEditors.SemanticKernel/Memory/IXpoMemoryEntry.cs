@@ -11,6 +11,6 @@ namespace Microsoft.SemanticKernel.Connectors.Xpo
         string Key { get; set; }
         string MetadataString { get; set; }
    
-        string Timestamp { get; set; }
+        DateTime Timestamp { get; set; }
     }
 }

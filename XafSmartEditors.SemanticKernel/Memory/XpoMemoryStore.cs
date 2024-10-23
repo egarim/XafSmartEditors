@@ -211,34 +211,48 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
         this.xpoEntryManager = xpoEntryManager;
         this._disposedValue = false;
     }
-
-    private static string? ToTimestampString(DateTimeOffset? timestamp)
-    {
-        string? v = timestamp?.ToString("u", CultureInfo.InvariantCulture);
-        return v;
-    }
-
-    private static DateTimeOffset? ParseTimestamp(string? str)
+    private static DateTime? ParseTimestamp(string? str)
     {
         if (!string.IsNullOrEmpty(str)
-            && DateTimeOffset.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset timestamp))
+            && DateTime.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime timestamp))
         {
             return timestamp;
         }
 
         return null;
     }
+    //private static string? ToTimestampString(DateTimeOffset? timestamp)
+    //{
+    //    string? v = timestamp?.ToString("u", CultureInfo.InvariantCulture);
+    //    return v;
+    //}
+    private static string? ToTimestampString(DateTime? timestamp)
+    {
+        string? v = timestamp?.ToString("u", CultureInfo.InvariantCulture);
+        return v;
+    }
+
+    //private static DateTimeOffset? ParseTimestamp(string? str)
+    //{
+    //    if (!string.IsNullOrEmpty(str)
+    //        && DateTimeOffset.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset timestamp))
+    //    {
+    //        return timestamp;
+    //    }
+
+    //    return null;
+    //}
 
     private async IAsyncEnumerable<MemoryRecord> GetAllAsync(string collectionName, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         // delete empty entry in the database if it exists (see CreateCollection)
         await this._dbConnector.DeleteEmptyAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false);
 
-        await foreach (DatabaseEntry dbEntry in this._dbConnector.ReadAllAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false))
+        await foreach (IXpoMemoryEntry dbEntry in this._dbConnector.ReadAllAsync(this.xpoEntryManager, collectionName, cancellationToken).ConfigureAwait(false))
         {
             ReadOnlyMemory<float> vector = JsonSerializer.Deserialize<ReadOnlyMemory<float>>(dbEntry.EmbeddingString, CustomJsonOptionsCache.Default);
 
-            var record = MemoryRecord.FromJsonMetadata(dbEntry.MetadataString, vector, dbEntry.Key, ParseTimestamp(dbEntry.Timestamp));
+            var record = MemoryRecord.FromJsonMetadata(dbEntry.MetadataString, vector, dbEntry.Key, dbEntry.Timestamp);
 
             yield return record;
         }
@@ -287,14 +301,14 @@ public class XpoMemoryStore : IMemoryStore, IDisposable
                     json: entry.MetadataString,
                     JsonSerializer.Deserialize<ReadOnlyMemory<float>>(entry.EmbeddingString, CustomJsonOptionsCache.Default),
                     entry.Key,
-                    ParseTimestamp(entry.Timestamp));
+                    entry.Timestamp.ToDateTimeOffset());
             }
 
             return MemoryRecord.FromJsonMetadata(
                 json: entry.MetadataString,
                 ReadOnlyMemory<float>.Empty,
                 entry.Key,
-                ParseTimestamp(entry.Timestamp));
+                entry.Timestamp.ToDateTimeOffset());
         }
         return null;
     }

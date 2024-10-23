@@ -1,29 +1,73 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using DevExpress.Persistent.Base;
+
 using System;
 using DevExpress.Xpo;
+using DevExpress.ExpressApp;
 
 namespace Microsoft.SemanticKernel.Connectors.Xpo;
-public class XpoDatabaseEntry : XPLiteObject, IXpoMemoryEntry
+[DefaultClassOptions]
+public class XpMemoryCollection : XPCustomObject
+{
+    public XpMemoryCollection(Session session) : base(session)
+    { }
+
+    string collectionName;
+
+    [Size(SizeAttribute.DefaultStringMappingFieldSize)]
+    public string CollectionName
+    {
+        get => collectionName;
+        set => SetPropertyValue(nameof(CollectionName), ref collectionName, value);
+    }
+
+}
+public class XpoDatabaseEntry : XPCustomObject, IXpoMemoryEntry
 {
     public XpoDatabaseEntry(Session session) : base(session)
     {
     }
 
+    DateTime timestamp;
     private string _oid;
     private string _collection;
-    private string _timestamp;
+
     private string _embeddingString;
     private string _metadataString;
     private string _key;
 
-    [Key(false)]
-    [Size(SizeAttribute.DefaultStringMappingFieldSize)]
-    public string Oid
+
+
+    //
+    // Summary:
+    //     Set this field to `true`` before profiling the application via XPO Profiler.
+    public static bool IsXpoProfiling;
+
+    [Persistent("Oid")]
+    [Key(true)]
+    [VisibleInListView(false)]
+    [VisibleInDetailView(false)]
+    [VisibleInLookupListView(false)]
+    [MemberDesignTimeVisibility(false)]
+    private Guid oid = Guid.Empty;
+
+    [PersistentAlias("oid")]
+    [VisibleInListView(false)]
+    [VisibleInDetailView(false)]
+    [VisibleInLookupListView(false)]
+    public Guid Oid => oid;
+
+
+    public override void AfterConstruction()
     {
-        get => this._oid;
-        set => this.SetPropertyValue(nameof(this.Oid), ref this._oid, value);
+        base.AfterConstruction();
+        oid = XpoDefault.NewGuid();
     }
+
+
+
+
 
     [Size(SizeAttribute.DefaultStringMappingFieldSize)]
     public string Key
@@ -46,11 +90,11 @@ public class XpoDatabaseEntry : XPLiteObject, IXpoMemoryEntry
         set => this.SetPropertyValue(nameof(this.EmbeddingString), ref this._embeddingString, value);
     }
 
-    [Size(SizeAttribute.DefaultStringMappingFieldSize)]
-    public string Timestamp
+    
+    public DateTime Timestamp
     {
-        get => this._timestamp;
-        set => this.SetPropertyValue(nameof(this.Timestamp), ref this._timestamp, value);
+        get => timestamp;
+        set => SetPropertyValue(nameof(Timestamp), ref timestamp, value);
     }
 
     [Size(SizeAttribute.DefaultStringMappingFieldSize)]
@@ -59,12 +103,5 @@ public class XpoDatabaseEntry : XPLiteObject, IXpoMemoryEntry
         get => this._collection;
         set => this.SetPropertyValue(nameof(this.Collection), ref this._collection, value);
     }
-    protected override void OnSaving()
-    {
-        if (this.Session.IsNewObject(this))
-        {
-            this.Oid = Guid.NewGuid().ToString();
-        }
-        base.OnSaving();
-    }
+
 }
