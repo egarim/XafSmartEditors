@@ -11,7 +11,7 @@ using XafSmartEditors.Razor.RagChat;
 namespace XafSmartEditors.Blazor.Server.Editors;
 
 
-[PropertyEditor(typeof(IRagData), true)]
+[PropertyEditor(typeof(IRagData), "CustomStringEdit", true)]
 public class IRagDataPropertyEditor : BlazorPropertyEditorBase, IComplexViewItem
 {
     public IRagDataPropertyEditor(Type objectType, IModelMemberViewItem model) : base(objectType, model)
