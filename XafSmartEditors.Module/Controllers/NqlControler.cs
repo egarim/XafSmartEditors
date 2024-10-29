@@ -10,6 +10,7 @@ using NqlDotNet.DevExpress;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,32 +31,46 @@ namespace XafSmartEditors.Module.Controllers
         }
         void ProcessingDone(Dictionary<int,object> results)
         {
-            CriteriaResult criteriaResult = (results[0] as CriteriaResult);
             var Cot = this.View.CurrentObject as BusinessObjects.CriteriaObjectTest;
-            Cot.DataTypeName = "XafSmartEditors.Module.BusinessObjects.Xpo" + "." + criteriaResult.RootEntity;
+            try
+            {
+                CriteriaResult criteriaResult = (results[0] as CriteriaResult);
+              
+                Cot.DataTypeName = "XafSmartEditors.Module.BusinessObjects.Xpo" + "." + criteriaResult.RootEntity;
 
 
 
-            //Cot.Criteria = Criteria.Criteria;
+                //Cot.Criteria = Criteria.Criteria;
+
+                Cot.GeneratedCriteria = criteriaResult.Criteria;
+                var Parsed = CriteriaOperator.Parse(Cot.GeneratedCriteria);
+                Cot.Criteria = Parsed.ToString();
+                //Cot.CriteriaDescription = await nqlService.CriteriaToNl(Criteria.Criteria, Schema, Doc);
+
+
+                var CriteriaObjectTestInstance = XafTypesInfo.Instance.FindTypeInfo(typeof(CriteriaObjectTest));
+                var criteriaMember = CriteriaObjectTestInstance.FindMember(nameof(CriteriaObjectTest.Criteria));
+                var helper = new CriteriaPropertyEditorHelper(criteriaMember);
+                Type type = XafTypesInfo.Instance.FindTypeInfo(Cot.DataTypeName).Type;
+                var Os = this.Application.CreateObjectSpace<CriteriaObjectTest>();
+                var Instance = Os.CreateObject(type);
+                string validationResult = "";
+                Cot.IsValid = helper.ValidateCriteria(Instance, Cot.Criteria, out validationResult);
+                Cot.ValidationResult = validationResult;
+            }
+            catch (Exception ex)
+            {
+                Cot.IsValid=false;
+                Cot.ValidationResult = ex.Message;
+            }
+            finally
+            {
+                Cot.IsProcessing = false;
+
+                this.View.ObjectSpace.CommitChanges();
+            }
+
            
-            Cot.GeneratedCriteria = criteriaResult.Criteria;
-            var Parsed = CriteriaOperator.Parse(Cot.GeneratedCriteria);
-            Cot.Criteria = Parsed.ToString();
-            //Cot.CriteriaDescription = await nqlService.CriteriaToNl(Criteria.Criteria, Schema, Doc);
-
-
-            var CriteriaObjectTestInstance = XafTypesInfo.Instance.FindTypeInfo(typeof(CriteriaObjectTest));
-            var criteriaMember = CriteriaObjectTestInstance.FindMember(nameof(CriteriaObjectTest.Criteria));
-            var helper = new CriteriaPropertyEditorHelper(criteriaMember);
-            Type type = XafTypesInfo.Instance.FindTypeInfo(Cot.DataTypeName).Type;
-            var Os = this.Application.CreateObjectSpace<CriteriaObjectTest>();
-            var Instance = Os.CreateObject(type);
-            string validationResult = "";
-            Cot.IsValid = helper.ValidateCriteria(Instance, Cot.Criteria, out validationResult);
-            Cot.ValidationResult = validationResult;
-            Cot.IsProcessing= false;
-            //Thread.Sleep(2000);
-            this.View.ObjectSpace.CommitChanges();
         }
 
         private async void action_Execute(object sender, SimpleActionExecuteEventArgs e)
@@ -84,10 +99,14 @@ namespace XafSmartEditors.Module.Controllers
 
 
 
-            Action<int, string, CriteriaResult> onProgressChanged = (progress, status, result) => Console.WriteLine($"{status} - Result: {result}");
+            Action<int, string, CriteriaResult> onProgressChanged = (progress, status, result) =>
+            {
+                Debug.WriteLine($"{status} - Result: {result}");
+            };
+            
             var worker = new AsyncBackgroundWorker<CriteriaResult>(
                 tasks,
-                null,
+                onProgressChanged,
                 result => ProcessingDone(result)
             );
 
