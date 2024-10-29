@@ -1,0 +1,1704 @@
+﻿Constants
+
+String constants
+
+Wrap string constants in apostrophes.
+
+If a string contains an apostrophe, double the apostrophe.
+
+Example: [Country] == 'France', [Name] == 'O''Neil'
+
+Char constants
+
+Wrap char constants in apostrophes and add the suffix c.
+
+Example: [Code] == 'a'c
+
+Date-time constants
+
+Wrap date-time constants in #.
+
+Example: [OrderDate] >= #2018-03-22 13:18:51.94944#
+
+DateOnly/TimeOnly constants
+
+Wrap DateOnly and TimeOnly constants in # and !.
+
+Examples: [OrderDate] >= #!2018-03-22!#, [OrderTime] >= #!18:22:00!#
+
+True
+
+The Boolean True value.
+
+Example: [InStock] == True
+
+False
+
+The Boolean False value.
+
+Example: [InStock] == False
+
+Enumeration
+
+Specify an enumeration value using its underlying integer value.
+
+Example: [Status] == 1
+
+Note: Cannot specify an enumeration value using its qualified name.
+
+Incorrect: [Status] = Status.InProgress
+
+You can register custom enumerations using static methods of the EnumProcessingHelper class.
+
+Example: Status = ##Enum#MyNamespace.Status,InProgress#
+
+Guid
+
+Wrap a Guid constant in curly braces. Use Guid constants in a relational operation with equality or inequality operators only.
+
+Example: [OrderID] == {513724e5-17b7-4ec6-abc4-0eae12c72c1f}
+
+Numeric
+
+Specify different numeric constant types in a string form using suffixes:
+
+Int32 (int) - 1
+
+Int16 (short) - 1s
+
+Byte (byte) - 1b
+
+Double (double) - 1.0
+
+Single (float) - 1.0f
+
+Decimal (decimal) - 1.0m
+
+Example: [Price] == 25.0m
+
+null
+
+Represents a null reference that does not refer to any object.
+
+To compare an operand with null, use the IsNull unary operator or the IsNull logical function.
+
+Example: Iif([Price] > 25.0m, [Price], null)
+
+You can build parameterized criteria using any number of positional parameters. To do this, add parameter placeholders (question mark characters) to a criteria expression to identify parameter positions and provide a list of parameter values. When building criteria, parameter placeholders are substituted with parameter values in the order they are listed.
+
+Example: CriteriaOperator.Parse("[Name] == ? and [Age] == ?", "John", 33)
+
+The following two examples are identical, but the second one reduces chances of formatting errors.
+
+Example 1: CriteriaOperator.Parse("[OrderDate] >= #1/1/2009#")
+
+Example 2: CriteriaOperator.Parse("[OrderDate] >= ?", new DateTime(2009, 1, 1))
+
+When parameters are not specified, a parameter placeholder is substituted with null.
+
+Example: CriteriaOperator.Parse("[Region] != ?")
+
+Important: For security reasons, do not use values entered by a user in criteria expressions without additional formatting. Refer to the FormatConstantValue(Object) static method description for details.
+
+Operators
+
++:
+
+Adds the value of one numeric expression to another (to concatenate string values, use the Concat function).
+
+Example: [UnitPrice] + 4
+
+XLS(x) Format Export-Friendly: Yes
+
+-:
+
+Finds the difference between two numbers.
+
+Example: [Price1] - [Price2]
+
+XLS(x) Format Export-Friendly: Yes
+
+*:
+
+Multiplies the value of two expressions.
+
+Example: [Quantity] * [UnitPrice] * (1 - [BonusAmount])
+
+XLS(x) Format Export-Friendly: Yes
+
+/:
+
+Divides the first operand by the second.
+
+Example: [Quantity] / 2
+
+XLS(x) Format Export-Friendly: Yes
+
+%:
+
+Returns the remainder (modulus) obtained by dividing one numeric expression by another.
+
+Example: [Quantity] % 3
+
+XLS(x) Format Export-Friendly: Yes
+
+|:
+
+Performs a bitwise inclusive OR on two numeric expressions.
+
+Compares each bit of its first operand to the corresponding bit of its second operand. If either bit is 1, the corresponding resulting bit is set to 1. Otherwise, the corresponding resulting bit is set to 0.
+
+Example: [Number] | [Number]
+
+XLS(x) Format Export-Friendly: Yes
+
+&:
+
+The bitwise AND operator.
+
+Compares each bit of its first operand to the corresponding bit of its second operand. If both bits are 1, the corresponding resulting bit is set to 1. Otherwise, the corresponding resulting bit is set to 0.
+
+Example: [Number] & 10
+
+XLS(x) Format Export-Friendly: Yes
+
+^:
+
+Performs a bitwise exclusive OR on two numeric expressions.
+
+Example: [Number] ^ [Number]
+
+XLS(x) Format Export-Friendly: Yes
+
+== or =**:
+
+Returns true if both operands have the same value; otherwise, it returns false.
+
+Example: [Quantity] == 10
+
+XLS(x) Format Export-Friendly: Yes
+
+!=:
+
+Returns true if the operands do not have the same value; otherwise, it returns false.
+
+Example: [Country] != 'France'
+
+XLS(x) Format Export-Friendly: Yes
+
+<:
+
+Less than operator. Used to compare expressions.
+
+Example: [UnitPrice] < 20
+
+XLS(x) Format Export-Friendly: Yes
+
+<=:
+
+Less than or equal to operator. Used to compare expressions.
+
+Example: [UnitPrice] <= 20
+
+XLS(x) Format Export-Friendly: Yes
+
+>=:
+
+Greater than or equal to operator. Used to compare expressions.
+
+Example: [UnitPrice] >= 30
+
+XLS(x) Format Export-Friendly: Yes
+
+>:
+
+Greater than operator. Used to compare expressions.
+
+Example: [UnitPrice] > 30
+
+XLS(x) Format Export-Friendly: Yes
+
+In (,,,):
+
+Tests for the existence of a property in an object.
+
+Example: [Country] In ('USA', 'UK', 'Italy')
+
+XLS(x) Format Export-Friendly: -
+
+Between (,):
+
+Specifies a range to test. Returns true if a value is greater than or equal to the first operand and less than or equal to the second operand.
+
+Example: [Quantity] Between (10, 20)
+
+XLS(x) Format Export-Friendly: Yes
+
+And or &&**:
+
+Performs a logical conjunction on two Boolean expressions.
+
+Examples: [InStock] And ([ExtendedPrice]> 100), [InStock] && ([ExtendedPrice]> 100)
+
+XLS(x) Format Export-Friendly: Yes
+
+Or or ||**:
+
+Performs a logical disjunction on two Boolean expressions.
+
+Example: [Country]=='USA' Or [Country]=='UK'
+
+XLS(x) Format Export-Friendly: Yes
+
+~:
+
+Performs a bitwise negation on a numeric expression.
+
+Example: ~[Roles] = 251
+
+XLS(x) Format Export-Friendly: -
+
+Not or !**:
+
+Performs a logical negation on a Boolean expression.
+
+Examples: Not [InStock], ![InStock]
+
+XLS(x) Format Export-Friendly: Yes
+
++ (unary):
+
+Returns a numeric expression’s value.
+
+Example: +[Value] = 10
+
+XLS(x) Format Export-Friendly: Yes
+
+- (unary):
+
+Returns the negative of a numeric expression’s value.
+
+Example: -[Value] = 20
+
+XLS(x) Format Export-Friendly: Yes
+
+Is Null:
+
+Returns true if an expression is a null reference, one that does not refer to any object.
+
+Example: [Region] is null
+
+XLS(x) Format Export-Friendly: Yes
+
+Is Not Null:
+
+Returns true if an expression is not a null reference, one that does not refer to any object.
+
+Example: [Region] is not null
+
+XLS(x) Format Export-Friendly: Yes
+
+Like:
+
+Returns true if a specific character string matches a specified pattern.
+
+Example: [Name] like 'Jo%'
+
+XLS(x) Format Export-Friendly: No
+
+Not Like:
+
+Returns true if a specific character string does not match a specified pattern.
+
+Example: [Name] not like 'Jo%'
+
+XLS(x) Format Export-Friendly: No
+
+Functions
+
+Aggregate Functions
+
+Avg(Value)
+
+Evaluates the average of the values in the collection.
+
+Example: [Products].Avg([UnitPrice])
+
+XLS(x) Format Export-Friendly: -
+
+Count()
+
+Returns the number of objects in a collection.
+
+Example: [Products].Count()
+
+XLS(x) Format Export-Friendly: -
+
+Exists()
+
+Determines whether the object exists in the collection.
+
+Example: [Categories][[CategoryID] == 7].Exists()
+
+XLS(x) Format Export-Friendly: -
+
+Max(Value)
+
+Returns the maximum expression value in a collection.
+
+Example: [Products].Max([UnitPrice])
+
+XLS(x) Format Export-Friendly: -
+
+Min(Value)
+
+Returns the minimum expression value in a collection.
+
+Example: [Products].Min([UnitPrice])
+
+XLS(x) Format Export-Friendly: -
+
+Single()
+
+Returns a single object from a collection that contains no more than one object.
+
+If the collection contains more objects, use the Condition property to specify a condition. The collection must contain only one object that satisfies the condition; otherwise, the function’s behavior is undefined (the function may return an unexpected value or throw an exception).
+
+You can pass an expression as a parameter: [Collection][Condition].Single(Expression).
+
+The function returns the Expression value evaluated on an object that meets the specified Condition (optional).
+
+Examples: [Accounts].Single() is not null, [Collection].Single([Property1]) - returns the found object’s property value.
+
+XLS(x) Format Export-Friendly: -
+
+Sum(Value)
+
+Returns the sum of all the expression values in the collection.
+
+Example: [Products].Sum([UnitsInStock])
+
+XLS(x) Format Export-Friendly: -
+
+InRange(Value, FromValue, ToValue)
+
+Returns True if Value is more than or equal to FromValue, and less than ToValue. The InRange(value, from, to) filter is equivalent to the from <= value && value < to expression.
+
+Example: InRange([ProductPrice], 10.00, 50.00)
+
+XLS(x) Format Export-Friendly: -
+
+Custom aggregate function
+
+Returns a custom expression value for a collection, according to a custom aggregate function.
+
+You can call the function directly or pass it as a parameter.
+
+Example: Call a Custom Aggregate Function
+
+XLS(x) Format Export-Friendly: -
+
+Date-time Functions
+
+AddDays(DateTime, DaysCount)
+
+Returns a date-time value that is the specified number of days from the specified DateTime.
+
+Example: AddDays([OrderDate], 30)
+
+XLS(x) Format Export-Friendly: Yes
+
+AddHours(DateTime, HoursCount)
+
+Returns a date-time value that is the specified number of hours from the specified DateTime.
+
+Example: AddHours([StartTime], 2)
+
+XLS(x) Format Export-Friendly: Yes
+
+AddMilliSeconds(DateTime, MilliSecondsCount)
+
+Returns a date-time value that is the specified number of milliseconds from the specified DateTime.
+
+Example: AddMilliSeconds(([StartTime], 5000))
+
+XLS(x) Format Export-Friendly: -
+
+AddMinutes(DateTime, MinutesCount)
+
+Returns a date-time value that is the specified number of minutes from the specified DateTime.
+
+Example: AddMinutes([StartTime], 30)
+
+XLS(x) Format Export-Friendly: Yes
+
+AddMonths(DateTime, MonthsCount)
+
+Returns a date-time value that is the specified number of months from the specified DateTime.
+
+Example: AddMonths([OrderDate], 1)
+
+XLS(x) Format Export-Friendly: Yes
+
+AddSeconds(DateTime, SecondsCount)
+
+Returns a date-time value that is the specified number of seconds from the specified DateTime.
+
+Example: AddSeconds([StartTime], 60)
+
+XLS(x) Format Export-Friendly: Yes
+
+AddTicks(DateTime, TicksCount)
+
+Returns a date-time value that is the specified number of ticks from the specified DateTime.
+
+Example: AddTicks([StartTime], 5000)
+
+XLS(x) Format Export-Friendly: -
+
+AddTimeSpan(DateTime, TimeSpan)
+
+Returns a date-time value that is from the specified DateTime for the given TimeSpan.
+
+Example: AddTimeSpan([StartTime], [Duration])
+
+XLS(x) Format Export-Friendly: -
+
+AddYears(DateTime, YearsCount)
+
+Returns a date-time value that is the specified number of years from the specified DateTime.
+
+Example: AddYears([EndDate], -1)
+
+XLS(x) Format Export-Friendly: Yes
+
+DateDiffDay(startDate, endDate)
+
+The differences in days between the two specified dates (time portion is not taken into account).
+
+Example: DateDiffDay([StartTime], Now())
+
+XLS(x) Format Export-Friendly: Yes
+
+DateDiffHour(startDate, endDate)
+
+The difference in hours between the two specified dates (minutes are not taken into account).
+
+Example: DateDiffHour([StartTime], Now())
+
+XLS(x) Format Export-Friendly: Yes
+
+DateDiffMilliSecond(startDate, endDate)
+
+Returns the number of millisecond boundaries between two non-nullable dates.
+
+Example: DateDiffMilliSecond([StartTime], Now())
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffMinute(startDate, endDate)
+
+Returns the number of minute boundaries between two non-nullable dates.
+
+Example: DateDiffMinute([StartTime], Now())
+
+XLS(x) Format Export-Friendly: Yes
+
+DateDiffMonth(startDate, endDate)
+
+Returns the number of month boundaries between two non-nullable dates.
+
+Example: DateDiffMonth([StartTime], Now())
+
+XLS(x) Format Export-Friendly: Yes
+
+DateDiffSecond(startDate, endDate)
+
+Returns the number of second boundaries between two non-nullable dates.
+
+Example: DateDiffSecond([StartTime], Now())
+
+XLS(x) Format Export-Friendly: Yes
+
+DateDiffTick(startDate, endDate)
+
+Returns the number of tick boundaries between two non-nullable dates.
+
+Example: DateDiffTick([StartTime], Now())
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffYear(startDate, endDate)
+
+Returns the number of year boundaries between two non-nullable dates.
+
+Example: DateDiffYear([StartTime], Now())
+
+XLS(x) Format Export-Friendly: Yes
+
+GetDate(DateTime)
+
+Extracts a date from the defined DateTime. The return value represents a DateTime object with the same date part, and the time part set to 00:00:00.
+
+Example: GetDate([OrderDateTime])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetDay(DateTime)
+
+Extracts a day from the defined DateTime.
+
+Example: GetDay([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetDayOfWeek(DateTime)
+
+Extracts a day of the week from the defined DateTime.
+
+Example: GetDayOfWeek([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetDayOfYear(DateTime)
+
+Extracts a day of the year from the defined DateTime.
+
+Example: GetDayOfYear([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetHour(DateTime)
+
+Extracts an hour from the defined DateTime.
+
+Example: GetHour([StartTime])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetMilliSecond(DateTime)
+
+Extracts milliseconds from the defined DateTime.
+
+Example: GetMilliSecond([StartTime])
+
+XLS(x) Format Export-Friendly: -
+
+GetMinute(DateTime)
+
+Extracts minutes from the defined DateTime.
+
+Example: GetMinute([StartTime])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetMonth(DateTime)
+
+Extracts a month from the defined DateTime.
+
+Example: GetMonth([StartTime])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetSecond(DateTime)
+
+Extracts seconds from the defined DateTime.
+
+Example: GetSecond([StartTime])
+
+XLS(x) Format Export-Friendly: Yes
+
+GetTimeOfDay(DateTime)
+
+Extracts the time of the day from the defined DateTime in ticks.
+
+Example: GetTimeOfDay([StartTime])
+
+XLS(x) Format Export-Friendly: -
+
+GetYear(DateTime)
+
+Extracts a year from the defined DateTime.
+
+Example: GetYear([StartTime])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsApril(DateTime)
+
+Returns True if the specified date falls within April.
+
+Example: IsApril([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsAugust(DateTime)
+
+Returns True if the specified date falls within August.
+
+Example: IsAugust([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsDecember(DateTime)
+
+Returns True if the specified date falls within December.
+
+Example: IsDecember([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsFebruary(DateTime)
+
+Returns True if the specified date falls within February.
+
+Example: IsFebruary([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsJanuary(DateTime)
+
+Returns True if the specified date falls within January.
+
+Example: IsJanuary([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsJuly(DateTime)
+
+Returns True if the specified date falls within July.
+
+Example: IsJuly([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsJune(DateTime)
+
+Returns True if the specified date falls within June.
+
+Example: IsJune([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsLastMonth(DateTime)
+
+Returns True if the specified date falls within the previous month.
+
+Example: IsLastMonth([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsLastYear(DateTime)
+
+Returns True if the specified date falls within the previous year.
+
+Example: IsLastYear([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsMarch(DateTime)
+
+Returns True if the specified date falls within March.
+
+Example: IsMarch([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsMay(DateTime)
+
+Returns True if the specified date falls within May.
+
+Example: IsMay([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsNextMonth(DateTime)
+
+Returns True if the specified date falls within the next month.
+
+Example: IsNextMonth([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsNextYear(DateTime)
+
+Returns True if the specified date falls within the next year.
+
+Example: IsNextYear([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsNovember(DateTime)
+
+Returns True if the specified date falls within November.
+
+Example: IsNovember([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsOctober(DateTime)
+
+Returns True if the specified date falls within October.
+
+Example: IsOctober([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsSameDay(firstDate, secondDate, …)
+
+Returns True if the specified date/time values fall within the same day.
+
+Example: IsSameDay([OrderDate], [ShipDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsSeptember(DateTime)
+
+Returns True if the specified date falls within September.
+
+Example: IsSeptember([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsThisMonth(DateTime)
+
+Returns True if the specified date falls within the current month.
+
+Example: IsThisMonth([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsThisWeek(DateTime)
+
+Returns True if the specified date falls within the current week.
+
+Example: IsThisWeek([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsYearToDate(DateTime)
+
+Returns True if the specified date falls within the year-to-date period. This period starts from the first day of the current year and continues to the current date (including the current date).
+
+Example: IsYearToDate([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsThisYear(DateTime)
+
+Returns True if the specified date falls within the current year.
+
+Example: IsThisYear([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+InDateRange(Date, FromDate, ToDate)
+
+Returns True if Date is more than or equal to FromDate, and less than the day that follows ToDate. The InDateRange(dateValue, from, to) filter is equivalent to the GetDate(from) <= dateValue && dateValue < AddDays(GetDate(to), 1) expression.
+
+Example: InDateRange([OrderDate], #2022-01-01#, #2022-12-31#)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeDayAfterTomorrow()
+
+Returns a date-time value corresponding to the day after Tomorrow.
+
+Example: AddDays(LocalDateTimeDayAfterTomorrow(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeLastMonth()
+
+Returns the DateTime value corresponding to the first day of the previous month.
+
+Example: AddMonths(LocalDateTimeLastMonth(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeLastWeek()
+
+Returns a date-time value corresponding to the first day of the previous week.
+
+Example: AddDays(LocalDateTimeLastWeek(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeLastYear()
+
+Returns the DateTime value corresponding to the first day of the previous year.
+
+Example: AddYears(LocalDateTimeLastYear(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeNextMonth()
+
+Returns a date-time value corresponding to the first day of the next month.
+
+Example: AddMonths(LocalDateTimeNextMonth(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeNextWeek()
+
+Returns a date-time value corresponding to the first day of the following week.
+
+Example: AddDays(LocalDateTimeNextWeek(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeNextYear()
+
+Returns a date-time value corresponding to the first day of the following year.
+
+Example: AddYears(LocalDateTimeNextYear(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeNow()
+
+Returns a date-time value corresponding to the current moment in time.
+
+Example: AddDays(LocalDateTimeNow(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeThisMonth()
+
+Returns a date-time value corresponding to the first day of the current month.
+
+Example: AddMonths(LocalDateTimeThisMonth(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeThisWeek()
+
+Returns a date-time value corresponding to the first day of the current week.
+
+Example: AddDays(LocalDateTimeThisWeek(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeThisYear()
+
+Returns a date-time value corresponding to the first day of the current year.
+
+Example: AddYears(LocalDateTimeThisYear(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeToday()
+
+Returns a date-time value corresponding to Today.
+
+Example: AddDays(LocalDateTimeToday(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeTomorrow()
+
+Returns a date-time value corresponding to Tomorrow.
+
+Example: AddDays(LocalDateTimeTomorrow(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeTwoMonthsAway()
+
+Returns the DateTime value corresponding to the first day of the following month.
+
+Example: AddMonths(LocalDateTimeTwoMonthAway(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeTwoWeeksAway()
+
+Returns the DateTime value corresponding to the first day of the following week.
+
+Example: AddDays(LocalDateTimeTwoWeeksAway(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeTwoYearsAway()
+
+Returns the DateTime value corresponding to the first day of the following year.
+
+Example: AddYears(LocalDateTimeTwoYearsAway(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeYearBeforeToday()
+
+Returns the DateTime value corresponding to the day one year ago.
+
+Example: AddYears(LocalDateTimeYearBeforeToday(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+LocalDateTimeYesterday()
+
+Returns a date-time value corresponding to Yesterday.
+
+Example: AddDays(LocalDateTimeYesterday(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+Now()
+
+Returns the current system date and time.
+
+Example: AddDays(Now(), 5)
+
+XLS(x) Format Export-Friendly: Yes
+
+Today()
+
+Returns the current date. Regardless of the actual time, this function returns midnight of the current date.
+
+Example: AddMonths(Today(), 1)
+
+XLS
+
+DateOnly Functions
+
+AddDays(DateOnly, DaysCount)
+
+Returns a date value that is the specified number of days from the specified DateOnly.
+
+Example: AddDays([OrderDate], 30)
+
+XLS(x) Format Export-Friendly: -
+
+AddMonths(DateOnly, MonthsCount)
+
+Returns a date value that is the specified number of months from the specified DateOnly.
+
+Example: AddMonths([OrderDate], 1)
+
+XLS(x) Format Export-Friendly: -
+
+AddYears(DateOnly, YearsCount)
+
+Returns a date value that is the specified number of years from the specified DateOnly.
+
+Example: AddYears([EndDate], -1)
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffDay(startDate, endDate)
+
+The differences in days between the two specified dates.
+
+Example: DateDiffDay([StartDate], Now())
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffMonth(startDate, endDate)
+
+Returns the number of month boundaries between two non-nullable dates.
+
+Example: DateDiffMonth([StartDate], Now())
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffYear(startDate, endDate)
+
+Returns the number of year boundaries between two non-nullable dates.
+
+Example: DateDiffYear([StartDate], Now())
+
+XLS(x) Format Export-Friendly: -
+
+GetDay(DateOnly)
+
+Extracts a day from the defined DateOnly.
+
+Example: GetDay([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+GetDayOfWeek(DateOnly)
+
+Extracts a day of the week from the defined DateOnly.
+
+Example: GetDayOfWeek([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+GetDayOfYear(DateOnly)
+
+Extracts a day of the year from the defined DateOnly.
+
+Example: GetDayOfYear([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+GetMonth(DateOnly)
+
+Extracts a month from the defined DateOnly.
+
+Example: GetMonth([StartDate])
+
+XLS(x) Format Export-Friendly: -
+
+GetYear(DateOnly)
+
+Extracts a year from the defined DateOnly.
+
+Example: GetYear([StartDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsApril(DateOnly)
+
+Returns True if the specified date falls within April.
+
+Example: IsApril([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsAugust(DateOnly)
+
+Returns True if the specified date falls within August.
+
+Example: IsAugust([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsDecember(DateOnly)
+
+Returns True if the specified date falls within December.
+
+Example: IsDecember([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsFebruary(DateOnly)
+
+Returns True if the specified date falls within February.
+
+Example: IsFebruary([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsJanuary(DateOnly)
+
+Returns True if the specified date falls within January.
+
+Example: IsJanuary([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsJuly(DateOnly)
+
+Returns True if the specified date falls within July.
+
+Example: IsJuly([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsJune(DateOnly)
+
+Returns True if the specified date falls within June.
+
+Example: IsJune([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsLastMonth(DateOnly)
+
+Returns True if the specified date falls within the previous month.
+
+Example: IsLastMonth([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsLastYear(DateOnly)
+
+Returns True if the specified date falls within the previous year.
+
+Example: IsLastYear([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsMarch(DateOnly)
+
+Returns True if the specified date falls within March.
+
+Example: IsMarch([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsMay(DateOnly)
+
+Returns True if the specified date falls within May.
+
+Example: IsMay([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsNextMonth(DateOnly)
+
+Returns True if the specified date falls within the next month.
+
+Example: IsNextMonth([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsNextYear(DateOnly)
+
+Returns True if the specified date falls within the next year.
+
+Example: IsNextYear([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsNovember(DateOnly)
+
+Returns True if the specified date falls within November.
+
+Example: IsNovember([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsOctober(DateOnly)
+
+Returns True if the specified date falls within October.
+
+Example: IsOctober([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsSameDay(firstDate, secondDate, …)
+
+Returns True if the specified DateOnly values fall within the same day.
+
+Example: IsSameDay([OrderDate], [ShipDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsSeptember(DateOnly)
+
+Returns True if the specified date falls within September.
+
+Example: IsSeptember([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsThisMonth(DateOnly)
+
+Returns True if the specified date falls within the current month.
+
+Example: IsThisMonth([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsThisWeek(DateOnly)
+
+Returns True if the specified date falls within the current week.
+
+Example: IsThisWeek([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsYearToDate(DateOnly)
+
+Returns True if the specified date falls within the year-to-date period. This period starts from the first day of the current year and continues to the current date (including the current date).
+
+Example: IsYearToDate([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsThisYear(DateOnly)
+
+Returns True if the specified date falls within the current year.
+
+Example: IsThisYear([OrderDate])
+
+XLS(x) Format Export-Friendly: -
+
+InDateRange(date, fromDate, toDate)
+
+Returns True if Date is more than or equal to FromDate, and less than the day that follows ToDate. The InDateRange(dateValue, from, to) filter is equivalent to the GetDate(from) <= dateValue && dateValue < AddDays(GetDate(to), 1) expression.
+
+Example: InDateRange([OrderDate], #!2022-01-01!#, #!2022-12-31!#)
+
+XLS(x) Format Export-Friendly: -
+
+DateOnlyFromParts(year, month, day)
+
+Returns a DateOnly value constructed from the specified Year, Month, and Day.
+
+Example: DateOnlyFromParts(2020, 06, 25)
+
+XLS(x) Format Export-Friendly: -
+
+TimeOnly Functions
+
+AddHours(TimeOnly, HoursCount)
+
+Returns a time value that is the specified number of hours from the specified TimeOnly.
+
+Example: AddHours([StartTime], 2)
+
+XLS(x) Format Export-Friendly: -
+
+AddMilliSeconds(TimeOnly, MilliSecondsCount)
+
+Returns a time value that is the specified number of milliseconds from the specified TimeOnly. This function is not supported in Entity Framework Core server mode sources.
+
+Example: AddMilliSeconds(([StartTime], 5000))
+
+XLS(x) Format Export-Friendly: -
+
+AddMinutes(TimeOnly, MinutesCount)
+
+Returns a time value that is the specified number of minutes from the specified TimeOnly.
+
+Example: AddMinutes([StartTime], 30)
+
+XLS(x) Format Export-Friendly: -
+
+AddSeconds(TimeOnly, SecondsCount)
+
+Returns a time value that is the specified number of seconds from the specified TimeOnly. This function is not supported in Entity Framework Core server mode sources.
+
+Example: AddSeconds([StartTime], 60)
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffHour(startTime, endTime)
+
+The difference in hours between the two specified times (minutes are not taken into account).
+
+Example: DateDiffHour([StartTime], Now())
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffMilliSecond(startTime, endTime)
+
+Returns the number of millisecond boundaries between two non-nullable times.
+
+Example: DateDiffMilliSecond([StartTime], Now())
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffMinute(startTime, endTime)
+
+Returns the number of minute boundaries between two non-nullable times.
+
+Example: DateDiffMinute([StartTime], Now())
+
+XLS(x) Format Export-Friendly: -
+
+DateDiffSecond(startTime, endTime)
+
+Returns the number of second boundaries between two non-nullable times.
+
+Example: DateDiffSecond([StartTime], Now())
+
+XLS(x) Format Export-Friendly: -
+
+GetHour(TimeOnly)
+
+Extracts an hour from the defined TimeOnly.
+
+Example: GetHour([StartTime])
+
+XLS(x) Format Export-Friendly: -
+
+GetMilliSecond(TimeOnly)
+
+Extracts milliseconds from the defined TimeOnly.
+
+Example: GetMilliSecond([StartTime])
+
+XLS(x) Format Export-Friendly: -
+
+GetMinute(TimeOnly)
+
+Extracts minutes from the defined TimeOnly.
+
+Example: GetMinute([StartTime])
+
+XLS(x) Format Export-Friendly: -
+
+GetSecond(TimeOnly)
+
+Extracts seconds from the defined TimeOnly.
+
+Example: GetSecond([StartTime])
+
+XLS(x) Format Export-Friendly: -
+
+Logical Functions
+
+Iif(Expression1, True_Value1, ..., ExpressionN, True_ValueN, False_Value)
+
+Returns one of several specified values depending upon the values of logical expressions.
+
+The function can take 2N+1 arguments (N – the number of specified logical expressions):
+
+Each odd argument specifies a logical expression;
+
+Each even argument specifies the value that is returned if the previous expression evaluates to true.
+
+Examples: Iif(Name = 'Bob', 1, 0), Iif(Name = 'Bob', 1, Name = 'Dan', 2, Name = 'Sam', 3, 0)
+
+XLS(x) Format Export-Friendly: Yes
+
+IsNull(Value)
+
+Returns True if the specified Value is NULL.
+
+Example: IsNull([OrderDate])
+
+XLS(x) Format Export-Friendly: Yes
+
+IsNull(Value1, Value2)
+
+Returns Value1 if it is not set to NULL; otherwise, Value2 is returned.
+
+Example: IsNull([ShipDate], [RequiredDate])
+
+XLS(x) Format Export-Friendly: -
+
+IsNullOrEmpty(String)
+
+Returns True if the specified String object is NULL or an empty string; otherwise, False is returned.
+
+Example: IsNullOrEmpty([ProductName])
+
+XLS(x) Format Export-Friendly: Yes
+
+Math Functions
+
+Abs(Value)
+
+Returns the given numeric expression’s absolute, positive value.
+
+Example: Abs(1 - [Discount])
+
+XLS(x) Format Export-Friendly: Yes
+
+Acos(Value)
+
+Returns a number’s arccosine (the angle in radians, whose cosine is the given float expression).
+
+Example: Acos([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Asin(Value)
+
+Returns a number’s arcsine (the angle in radians, whose sine is the given float expression).
+
+Example: Asin([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Atn(Value)
+
+Returns a number’s arctangent (the angle in radians, whose tangent is the given float expression).
+
+Example: Atn([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Atn2(Value1, Value2)
+
+Returns the angle whose tangent is the quotient of two specified numbers in radians.
+
+Example: Atn2([Value1], [Value2])
+
+XLS(x) Format Export-Friendly: Yes
+
+BigMul(Value1, Value2)
+
+Returns an Int64 containing the full product of two specified 32-bit numbers.
+
+Example: BigMul([Amount], [Quantity])
+
+XLS(x) Format Export-Friendly: -
+
+Ceiling(Value)
+
+Returns the smallest integer that is greater than or equal to the numeric expression.
+
+Example: Ceiling([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Cos(Value)
+
+Returns the angle’s cosine, in radians.
+
+Example: Cos([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Cosh(Value)
+
+Returns the angle’s hyperbolic cosine, in radians.
+
+Example: Cosh([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Exp(Value)
+
+Returns the float expression’s exponential value.
+
+Example: Exp([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Floor(Value)
+
+Returns the largest integer less than or equal to the numeric expression.
+
+Example: Floor([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Log(Value)
+
+Returns a specified number’s natural logarithm.
+
+Example: Log([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Log(Value, Base)
+
+Returns the logarithm of a specified number in a specified Base.
+
+Example: Log([Value], 2)
+
+XLS(x) Format Export-Friendly: Yes
+
+Log10(Value)
+
+Returns a specified number’s base 10 logarithm.
+
+Example: Log10([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Max(Value1, Value2)
+
+Returns the maximum value from the specified values.
+
+Example: Max([Value1], [Value2])
+
+XLS(x) Format Export-Friendly: Yes
+
+Min(Value1, Value2)
+
+Returns the minimum value from the specified values.
+
+Example: Min([Value1], [Value2])
+
+XLS(x) Format Export-Friendly: Yes
+
+Power(Value, Power)
+
+Returns a specified number raised to a specified power.
+
+Example: Power([Value], 3)
+
+XLS(x) Format Export-Friendly: Yes
+
+Rnd()
+
+Returns a random number that is less than 1, but greater than or equal to zero.
+
+Example: Rnd()*100
+
+XLS(x) Format Export-Friendly: Yes
+
+Round(Value)
+
+Rounds the given value to the nearest integer.
+
+Example: Round([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Round(Value, Precision)
+
+Rounds the given value to the nearest integer, or to a specified number of decimal places.
+
+Example: Round([Value], 2)
+
+XLS(x) Format Export-Friendly: Yes
+
+Sign(Value)
+
+Returns the positive (+1), zero (0), or negative (-1) sign of the given expression.
+
+Example: Sign([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Collection Elements Verification
+
+Use brackets [] to check if a collection contains an element that satisfies a condition.
+
+Example: [Accounts][[Amount] == 100] returns true if the Accounts collection contains at least one element that satisfies the [Amount] == 100 condition.
+
+Example: [Accounts][] returns false if the Accounts collection is empty.
+
+Parent Relating Operator
+
+Use the parent relating operator (^ character) to refer to a parent in expressions written in the context of a child. You can apply this operator successively to navigate multiple parent relationships.
+
+Example: [Orders][[^.RegistrationDate] == Date] returns true if there is at least one Order that is made on the day the parent Customer is registered.
+
+Grouping Clauses with Brackets
+
+Use brackets to ensure that your expression returns the intended results.
+
+Example: [Accounts][[Date] == #8/25/2006#] && [Accounts][[Amount] == 100] returns all the Customers where an Account exists with a Date of 8/25/2006 and where an account exists with an Amount of 100.
+
+Example: [Accounts][[Date] == #8/25/2006# && [Amount] == 100] returns all Customers that have an Account with both a Date of 8/25/2006 and an Amount of 100.
+
+Operator Precedence
+
+When an expression contains multiple operators, their precedence controls the order in which expression elements are evaluated:
+
+Literal values
+
+Parameters
+
+Identifiers
+
+OR (left-associative)
+
+AND (left-associative)
+
+. relationship qualifier (left-associative)
+
+==, !=
+
+<, >, <=, >=
+
+-, + (left-associative)
+
+*, /, % (left-associative)
+
+NOT
+
+unary -
+
+In
+
+Iif
+
+Trim(), Len(), Substring(), IsNull()
+
+[] (for set-restriction)
+
+()
+
+Example: Accounts[Amount == 2 + 48 * 2]
+
+Example: Accounts[Amount == (2 + 48) * 2] (addition operation is performed first because of parentheses)
+
+Case Sensitivity
+
+Operators are case insensitive.
+
+Field values’ case sensitivity depends on the data source.
+
+Note: A data source affects certain operators’ behavior. For instance, by default, SQL Server Express 2005 is configured as case insensitive.
+
+Example: Lower(Name) == Upper(Name) always evaluates to true.
+
+Field Names
+
+You can mark a keyword-like field name with an escape character (@ sign).
+
+Example: @Or = 'value' (interprets @Or as the field named "Or", not the logical operator OR).
+
+Tip: Use the FormatPropertyName(String) static method to format field names.
+
+Sin(Value)
+
+Returns the sine of the angle defined in radians.
+
+Example: Sin([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Sinh(Value)
+
+Returns the hyperbolic sine of the angle defined in radians.
+
+Example: Sinh([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Sqr(Value)
+
+Returns the square root of a given number.
+
+Example: Sqr([Value])
+
+XLS(x) Format Export-Friendly: -
+Tan(Value)
+
+Returns the tangent of the angle defined in radians.
+
+Example: Tan([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+Tanh(Value)
+
+Returns the hyperbolic tangent of the angle defined in radians.
+
+Example: Tanh([Value])
+
+XLS(x) Format Export-Friendly: Yes
+
+ToDecimal(Value)
+
+Converts Value to an equivalent decimal number.
+
+Example: ToDecimal([Value])
+
+XLS(x) Format Export-Friendly: -
+
+ToDouble(Value)
+
+Converts Value to an equivalent 64-bit double-precision floating-point number.
+
+Example: ToDouble([Value])
+
+XLS(x) Format Export-Friendly: -
+
+ToFloat(Value)
+
+Converts Value to an equivalent 32-bit single-precision floating-point number.
+
+Example: ToFloat([Value])
+
+XLS(x) Format Export-Friendly: -
+
+ToInt(Value)
+
+Converts Value to an equivalent 32-bit signed integer.
+
+Example: ToInt([Value])
+
+XLS(x) Format Export-Friendly: -
+
+ToLong(Value)
+
+Converts Value to an equivalent 64-bit signed integer.
+
+Example: ToLong([Value])
+
+XLS(x) Format Export-Friendly: -

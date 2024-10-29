@@ -9,10 +9,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Data\Categories.txt" />
+    <None Remove="Data\DevExpressCriteriaSyntax.txt" />
+    <None Remove="Data\Entities.json" />
+    <None Remove="Data\EntityProperties.json" />
     <None Remove="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\DevExpressCriteriaSyntax.txt" />
+    <EmbeddedResource Include="Data\Entities.json" />
+    <EmbeddedResource Include="Data\EntityProperties.json" />
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>

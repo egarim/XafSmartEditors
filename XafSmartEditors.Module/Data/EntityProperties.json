@@ -1,0 +1,208 @@
+{
+  "EntityProperties": [
+    {
+      "entityName": "Customer",
+      "properties": [
+        {
+          "propertyName": "customerID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each customer"
+        },
+        {
+          "propertyName": "name",
+          "type": "string"
+        },
+        {
+          "propertyName": "categoryID",
+          "type": "string",
+          "key": "foreign",
+          "references": "CustomerCategory.categoryID"
+        },
+        {
+          "propertyName": "addressID",
+          "type": "string",
+          "key": "foreign",
+          "references": "Address.addressID"
+        }
+      ]
+    },
+    {
+      "entityName": "Address",
+      "properties": [
+        {
+          "propertyName": "addressID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each address"
+        },
+        {
+          "propertyName": "street",
+          "type": "string"
+        },
+        {
+          "propertyName": "city",
+          "type": "string"
+        },
+        {
+          "propertyName": "state",
+          "type": "string"
+        },
+        {
+          "propertyName": "zipcode",
+          "type": "string"
+        },
+        {
+          "propertyName": "country",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "entityName": "InvoiceHeader",
+      "properties": [
+        {
+          "propertyName": "invoiceID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each invoice"
+        },
+        {
+          "propertyName": "customerID",
+          "type": "string",
+          "key": "foreign",
+          "references": "Customer.customerID"
+        },
+        {
+          "propertyName": "invoiceDate",
+          "type": "date"
+        },
+        {
+          "propertyName": "dueDate",
+          "type": "date"
+        },
+        {
+          "propertyName": "totalAmount",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "entityName": "InvoiceDetails",
+      "properties": [
+        {
+          "propertyName": "invoiceDetailID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each invoice line item"
+        },
+        {
+          "propertyName": "invoiceID",
+          "type": "string",
+          "key": "foreign",
+          "references": "InvoiceHeader.invoiceID"
+        },
+        {
+          "propertyName": "productID",
+          "type": "string",
+          "key": "foreign",
+          "references": "Product.productID"
+        },
+        {
+          "propertyName": "quantity",
+          "type": "number"
+        },
+        {
+          "propertyName": "unitPrice",
+          "type": "number"
+        },
+        {
+          "propertyName": "totalPrice",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "entityName": "Product",
+      "properties": [
+        {
+          "propertyName": "productID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each product"
+        },
+        {
+          "propertyName": "name",
+          "type": "string"
+        },
+        {
+          "propertyName": "categoryID",
+          "type": "string",
+          "key": "foreign",
+          "references": "ProductCategory.categoryID"
+        },
+        {
+          "propertyName": "priceListID",
+          "type": "string",
+          "key": "foreign",
+          "references": "PriceList.priceListID"
+        }
+      ]
+    },
+    {
+      "entityName": "CustomerCategory",
+      "properties": [
+        {
+          "propertyName": "categoryID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each customer category"
+        },
+        {
+          "propertyName": "categoryName",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "entityName": "ProductCategory",
+      "properties": [
+        {
+          "propertyName": "categoryID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each product category"
+        },
+        {
+          "propertyName": "categoryName",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "entityName": "PriceList",
+      "properties": [
+        {
+          "propertyName": "priceListID",
+          "type": "string",
+          "key": "primary",
+          "description": "Unique identifier for each price list"
+        },
+        {
+          "propertyName": "productID",
+          "type": "string",
+          "key": "foreign",
+          "references": "Product.productID"
+        },
+        {
+          "propertyName": "price",
+          "type": "number"
+        },
+        {
+          "propertyName": "effectiveDate",
+          "type": "date"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "Entities": [
+    {
+      "entityName": "Customer"
+    },
+    {
+      "entityName": "Address"
+    },
+    {
+      "entityName": "InvoiceHeader"
+    },
+    {
+      "entityName": "InvoiceDetails"
+    },
+    {
+      "entityName": "Product"
+    },
+    {
+      "entityName": "CustomerCategory"
+    },
+    {
+      "entityName": "ProductCategory"
+    },
+    {
+      "entityName": "PriceList"
+    }
+  ]
+}
