@@ -10,5 +10,7 @@ namespace NqlDotNet
     {
         public string RootEntity { get; set; }
         public string Criteria { get; set; }
+
+        public string CriteriaDescription { get; set; }
     }
 }
