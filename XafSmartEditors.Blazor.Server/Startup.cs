@@ -139,6 +139,7 @@ public class Startup {
 
             }
 
+            //HACK needed to add A.I to the report viewer
 
             config.AddBlazorReportingAIIntegration(config =>
             {

@@ -25,10 +25,11 @@ namespace NqlDotNet.DevExpress
         }
         public async Task<CriteriaResult> NlToCriteria(string Nlq, string Schema, string Doc)
         {
-           
-            KernelArguments arguments = new(new OpenAIPromptExecutionSettings { MaxTokens = 500, Temperature = 0.5, ResponseFormat="json_object" });
+      
+             KernelArguments arguments = new(new OpenAIPromptExecutionSettings { MaxTokens = 500, Temperature = 0.5, ResponseFormat="json_object", ChatSystemPrompt =$"Given the DevExpress Criteria Language syntax documentation {Doc} and JSON schema of classes {Schema},only use functions from the documentation and not use properties that are not in the schema,make sure that the properties exist in order to navigate within the property tree, if there is not relationship or collection to navigate from,try with a different entity as entry point" });
             //Given the DevExpress Criteria Language syntax documentation and the.
-            FunctionResult value = await sk.InvokePromptAsync($"Given the DevExpress Criteria Language syntax documentation {Doc} and JSON schema of classes {Schema}, transform a natural language query #{Nlq}# into a criteria string suitable for querying data,return only the criteria without any extra text or explanation, the result should be a json with this structure {ResultFormat},only use functions from the documentation and not use properties that are not in the schema", arguments);
+            FunctionResult value = await sk.InvokePromptAsync($"transform a natural language query #{Nlq}# into a criteria string suitable for querying data,return only the criteria without any extra text or explanation, the result should be a json with this structure {ResultFormat}", arguments);
+            //FunctionResult value = await sk.InvokePromptAsync($"Given the DevExpress Criteria Language syntax documentation {Doc} and JSON schema of classes {Schema}, transform a natural language query #{Nlq}# into a criteria string suitable for querying data,return only the criteria without any extra text or explanation, the result should be a json with this structure {ResultFormat},only use functions from the documentation and not use properties that are not in the schema", arguments);
             Debug.WriteLine(value);
             CriteriaResult result = JsonSerializer.Deserialize<CriteriaResult>(value.ToString());
             return result;

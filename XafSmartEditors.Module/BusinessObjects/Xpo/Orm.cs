@@ -31,6 +31,15 @@ namespace XafSmartEditors.Module.BusinessObjects.Xpo
 
         [Association("Address-Customers")]
         public Xpo.Address Address { get; set; }
+
+        [Association("Customer-Invoices")]
+        public XPCollection<InvoiceHeader> Invoices
+        {
+            get
+            {
+                return GetCollection<InvoiceHeader>(nameof(Invoices));
+            }
+        }
     }
     public class Address : XPObject
     {
@@ -90,8 +99,7 @@ namespace XafSmartEditors.Module.BusinessObjects.Xpo
 
 
 
-        //[Association("Customer-InvoiceHeaders")]
-        
+        [Association("Customer-Invoices")]
         public Customer Customer
         {
             get => customer;

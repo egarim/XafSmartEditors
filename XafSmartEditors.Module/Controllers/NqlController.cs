@@ -19,17 +19,19 @@ using XafSmartEditors.Razor.NqlDotNet;
 
 namespace XafSmartEditors.Module.Controllers
 {
-    public class NqlControler : ViewController
+    public class NqlController : ViewController
     {
         SimpleAction action;
-        public NqlControler() : base()
+        public NqlController() : base()
         {
             // Target required Views (use the TargetXXX properties) and create their Actions.
             action = new SimpleAction(this, "Generate Criteria", "View");
             action.Execute += action_Execute;
             
+            this.TargetObjectType= typeof(BusinessObjects.CriteriaObjectTest);
+            this.TargetViewType = ViewType.DetailView;
         }
-        void ProcessingDone(Dictionary<int,object> results)
+        protected virtual void ProcessingDone(Dictionary<int,object> results)
         {
             var Cot = this.View.CurrentObject as BusinessObjects.CriteriaObjectTest;
             try
@@ -55,6 +57,7 @@ namespace XafSmartEditors.Module.Controllers
                 var Os = this.Application.CreateObjectSpace<CriteriaObjectTest>();
                 var Instance = Os.CreateObject(type);
                 string validationResult = "";
+                Cot.GeneratedCriteria = Cot.Criteria;
                 Cot.IsValid = helper.ValidateCriteria(Instance, Cot.Criteria, out validationResult);
                 Cot.ValidationResult = validationResult;
             }
@@ -73,15 +76,15 @@ namespace XafSmartEditors.Module.Controllers
            
         }
 
-        private async void action_Execute(object sender, SimpleActionExecuteEventArgs e)
+        protected virtual async void action_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
             var Cot= this.View.CurrentObject as BusinessObjects.CriteriaObjectTest;
-            string Doc = EmbeddedResourceHelper.ReadEmbeddedResource("DevExpressCriteriaSyntax.txt", "XafSmartEditors.Module.Data", this.GetType());
+            string Doc = EmbeddedResourceHelper.ReadEmbeddedResource("DevExpressCriteriaSyntax.txt", "XafSmartEditors.Module.Data", typeof(BusinessObjects.CriteriaObjectTest));
             Cot.IsProcessing = true;
             this.ObjectSpace.CommitChanges();
 
             var os=this.View.ObjectSpace as XPObjectSpace;
-            var props = XpoUtilities.GetEntityProperties(this.GetType().Assembly,os.Session);
+            var props = XpoUtilities.GetEntityProperties(Cot.GetType().Assembly,os.Session);
             string Schema = System.Text.Json.JsonSerializer.Serialize(props);
             string Nlq = Cot.Nql;
 

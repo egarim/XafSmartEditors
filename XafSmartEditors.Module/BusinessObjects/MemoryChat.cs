@@ -15,6 +15,7 @@ using System.Text;
 namespace XafSmartEditors.Module.BusinessObjects
 {
     [DefaultClassOptions]
+    [ModelDefault("IsCloneable", "True")]
     //[ImageName("BO_Contact")]
     //[DefaultProperty("DisplayMemberNameForLookupEditorsOfThisType")]
     //[DefaultListViewOptions(MasterDetailMode.ListViewOnly, false, NewItemRowPosition.None)]
@@ -50,7 +51,7 @@ namespace XafSmartEditors.Module.BusinessObjects
             get => minimumRelevanceScore;
             set => SetPropertyValue(nameof(MinimumRelevanceScore), ref minimumRelevanceScore, value);
         }
-        [Association("MemoryChat-MemoryEntrys")]
+        [Association("MemoryChat-MemoryEntrys"),DevExpress.Xpo.Aggregated()]
         public XPCollection<MemoryEntry> MemoryEntries
         {
             get
