@@ -126,7 +126,7 @@ public class Startup {
                 var clientOpenAi = new OpenAIClient(new System.ClientModel.ApiKeyCredential(aiSettings.Key));
                 config.RegisterChatClientOpenAIService(clientOpenAi, aiSettings.Model);
                 config.RegisterOpenAIAssistants(clientOpenAi, aiSettings.Model);
-
+               
             }
             if (aiSettings.Service.ToLower() == "Azure")
             {
