@@ -17,6 +17,7 @@ using DevExpress.AIIntegration.Reporting;
 using DevExpress.AIIntegration.Blazor.Reporting.Viewer.Models;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace XafSmartEditors.Blazor.Server;
 
@@ -157,7 +158,7 @@ public class Startup {
 
         });
 
-    
+        services.AddSpeechRecognition(); // <- Add this line for speech recognition.
 
     }
 

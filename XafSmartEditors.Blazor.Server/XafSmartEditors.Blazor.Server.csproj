@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DevExpress.AIIntegration.Blazor.Reporting.Viewer" Version="24.2.1-alpha-24260" />
+		<PackageReference Include="Toolbelt.Blazor.SpeechRecognition" Version="1.0.0" />
 	</ItemGroup>
 	
 	<ItemGroup>

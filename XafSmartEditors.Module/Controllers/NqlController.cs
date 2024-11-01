@@ -21,12 +21,12 @@ namespace XafSmartEditors.Module.Controllers
 {
     public class NqlController : ViewController
     {
-        SimpleAction action;
+        protected SimpleAction generateCriteria;
         public NqlController() : base()
         {
             // Target required Views (use the TargetXXX properties) and create their Actions.
-            action = new SimpleAction(this, "Generate Criteria", "View");
-            action.Execute += action_Execute;
+            generateCriteria = new SimpleAction(this, "Generate Criteria", "View");
+            generateCriteria.Execute += action_Execute;
             
             this.TargetObjectType= typeof(BusinessObjects.CriteriaObjectTest);
             this.TargetViewType = ViewType.DetailView;
@@ -43,23 +43,27 @@ namespace XafSmartEditors.Module.Controllers
 
 
                 //Cot.Criteria = Criteria.Criteria;
+                if (criteriaResult.Criteria != null)
+                {
+                    Cot.GeneratedCriteria = criteriaResult.Criteria;
+                    var Parsed = CriteriaOperator.Parse(Cot.GeneratedCriteria);
+                    Cot.Criteria = Parsed.ToString();
+                    //Cot.CriteriaDescription = await nqlService.CriteriaToNl(Criteria.Criteria, Schema, Doc);
 
-                Cot.GeneratedCriteria = criteriaResult.Criteria;
-                var Parsed = CriteriaOperator.Parse(Cot.GeneratedCriteria);
-                Cot.Criteria = Parsed.ToString();
-                //Cot.CriteriaDescription = await nqlService.CriteriaToNl(Criteria.Criteria, Schema, Doc);
 
-
-                var CriteriaObjectTestInstance = XafTypesInfo.Instance.FindTypeInfo(typeof(CriteriaObjectTest));
-                var criteriaMember = CriteriaObjectTestInstance.FindMember(nameof(CriteriaObjectTest.Criteria));
-                var helper = new CriteriaPropertyEditorHelper(criteriaMember);
-                Type type = XafTypesInfo.Instance.FindTypeInfo(Cot.DataTypeName).Type;
-                var Os = this.Application.CreateObjectSpace<CriteriaObjectTest>();
-                var Instance = Os.CreateObject(type);
-                string validationResult = "";
-                Cot.GeneratedCriteria = Cot.Criteria;
-                Cot.IsValid = helper.ValidateCriteria(Instance, Cot.Criteria, out validationResult);
-                Cot.ValidationResult = validationResult;
+                    var CriteriaObjectTestInstance = XafTypesInfo.Instance.FindTypeInfo(typeof(CriteriaObjectTest));
+                    var criteriaMember = CriteriaObjectTestInstance.FindMember(nameof(CriteriaObjectTest.Criteria));
+                    var helper = new CriteriaPropertyEditorHelper(criteriaMember);
+                    Type type = XafTypesInfo.Instance.FindTypeInfo(Cot.DataTypeName).Type;
+                    var Os = this.Application.CreateObjectSpace<CriteriaObjectTest>();
+                    var Instance = Os.CreateObject(type);
+                    string validationResult = "";
+                    Cot.GeneratedCriteria = Cot.Criteria;
+                    Cot.IsValid = helper.ValidateCriteria(Instance, Cot.Criteria, out validationResult);
+                    Cot.ValidationResult = validationResult;
+                }
+                
+               
             }
             catch (Exception ex)
             {
