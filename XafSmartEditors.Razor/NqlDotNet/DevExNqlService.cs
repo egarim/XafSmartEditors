@@ -17,7 +17,7 @@ namespace NqlDotNet.DevExpress
         const string ResultFormat = "{\"RootEntity\": null, \"Criteria\": null}";
         public DevExNqlService()
         {
-            var clientOpenAi = new OpenAIClient(new System.ClientModel.ApiKeyCredential(Environment.GetEnvironmentVariable("OpenAiTestKey")));
+            OpenAIClient clientOpenAi = new OpenAIClient(new System.ClientModel.ApiKeyCredential(Environment.GetEnvironmentVariable("OpenAiTestKey")));
             var KernelBuilder = Kernel.CreateBuilder();
             KernelBuilder.AddOpenAIChatCompletion("gpt-4o-mini", clientOpenAi);
             sk = KernelBuilder.Build();

@@ -12,6 +12,7 @@ using DevExpress.Persistent.BaseImpl.PermissionPolicy;
 using XafSmartEditors.Module.BusinessObjects;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using XafSmartEditors.Module.BusinessObjects.XafSmartEditors.Module.BusinessObjects;
 
 namespace XafSmartEditors.Module.DatabaseUpdate;
 
@@ -48,7 +49,11 @@ public class Updater : ModuleUpdater {
         // If a role doesn't exist in the database, create this role
         var defaultRole = CreateDefaultRole();
         var adminRole = CreateAdminRole();
+        if (ObjectSpace.GetObjectsCount(typeof(MainChat), null) == 0)
+        {
+            MainChat singleton = ObjectSpace.CreateObject<MainChat>();
 
+        }
         ObjectSpace.CommitChanges(); //This line persists created object(s).
 
         UserManager userManager = ObjectSpace.ServiceProvider.GetRequiredService<UserManager>();
