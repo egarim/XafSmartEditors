@@ -1,4 +1,4 @@
-﻿@using DevExpress.AIIntegration.OpenAI.Services
+﻿
 @using DevExpress.AIIntegration.Blazor.Chat
 @using System.Reflection
 @using DevExpress.Blazor
@@ -49,11 +49,11 @@
     
     async Task Initialized(IAIChat chat)
     {
-        await chat.UseAssistantAsync(new OpenAIAssistantOptions(
-            this.Value.FileName,
-           this.Value.FileContent,
-            this.Value.Prompt)
-        );
+        // await chat.UseAssistantAsync(new OpenAIAssistantOptions(
+        //     this.Value.FileName,
+        //    this.Value.FileContent,
+        //     this.Value.Prompt)
+        // );
     }
 
     MarkupString ToHtml(string text)

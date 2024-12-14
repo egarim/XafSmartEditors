@@ -142,17 +142,17 @@ public class Startup {
 
             //HACK needed to add A.I to the report viewer
 
-            config.AddBlazorReportingAIIntegration(config =>
-            {
-                config.SummarizeBehavior = SummarizeBehavior.Abstractive;
-                config.AvailabelLanguages = new List<LanguageItem>() {
-                        new LanguageItem() { Key = "de", Text = "German" },
-                        new LanguageItem() { Key = "es", Text = "Spanish" },
-                        new LanguageItem() { Key = "en", Text = "English" },
-                        new LanguageItem() { Key = "ru", Text = "Russian" },
-                        new LanguageItem() { Key = "it", Text = "Italian" }
-                    };
-            });
+            //config.AddBlazorReportingAIIntegration(config =>
+            //{
+            //    config.SummarizeBehavior = SummarizeBehavior.Abstractive;
+            //    config.AvailabelLanguages = new List<LanguageItem>() {
+            //            new LanguageItem() { Key = "de", Text = "German" },
+            //            new LanguageItem() { Key = "es", Text = "Spanish" },
+            //            new LanguageItem() { Key = "en", Text = "English" },
+            //            new LanguageItem() { Key = "ru", Text = "Russian" },
+            //            new LanguageItem() { Key = "it", Text = "Italian" }
+            //        };
+            //});
 
 
 

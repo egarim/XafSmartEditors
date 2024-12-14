@@ -1,17 +1,18 @@
-﻿@using DevExpress.AIIntegration.OpenAI.Services
+﻿
 @using DevExpress.AIIntegration.Blazor.Chat
 @using System.Reflection
 @using DevExpress.AIIntegration.Services.Chat
 @using DevExpress.Blazor
 @using Markdig
+@using Microsoft.Extensions.AI
 @using Microsoft.SemanticKernel.ChatCompletion
 @using System.Diagnostics
 @using Microsoft.SemanticKernel.Memory
 
 <DxAIChat CssClass="my-chat" MessageSent="MessageSent"
-          RenderMode="AnswerRenderMode.Markdown"
-          UseStreaming="true"
-          SizeMode="SizeMode.Medium">
+RenderMode="AnswerRenderMode.Markdown"
+UseStreaming="true"
+SizeMode="SizeMode.Medium">
     <EmptyMessageAreaTemplate>
         <div class="my-chat-ui-description">
             <span style="font-weight: bold; color: #008000;">Rag Chat</span> Assistant is ready to answer your questions.
@@ -26,9 +27,9 @@
 
 <style>
     .my-chat {
-        width: 680px;
-        margin: 20px;
-        height: 500px;
+    width: 680px;
+    margin: 20px;
+    height: 500px;
     }
 </style>
 
@@ -91,11 +92,16 @@
             var Result = await Value.ChatCompletionService.GetChatMessageContentAsync(prompt);
             MessageContent = Result.InnerContent.ToString();
         }
-        
+
         Debug.WriteLine(MessageContent);
         ChatHistory.AddAssistantMessage(MessageContent);
-        var message = new Message(MessageRole.Assistant, MessageContent);
-        args.SendMessage(message);
+
+
+        //var message = new Message(MessageRole.Assistant, MessageContent);
+
+
+        await args.Chat.SendMessage(MessageContent, ChatRole.Assistant);
+        //args.SendMessage(message);
     }
 
 
